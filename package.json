@@ -3,14 +3,25 @@
   "private": true,
   "scripts": {
     "dev": "pnpm --filter web dev",
-    "lint": "pnpm --filter web lint"
+    "lint": "pnpm --filter web lint",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "ts-node prisma/seed.ts",
+    "prisma:studio": "prisma studio"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.1",
+    "@types/pg": "^8.15.6",
+    "dotenv": "^17.2.3",
     "playwright": "^1.56.1",
-    "prisma": "^7.0.0"
+    "prisma": "^7.0.0",
+    "ts-node": "^10.9.2"
   },
   "dependencies": {
-    "@prisma/client": "^7.0.0"
+    "@prisma/adapter-pg": "^7.0.0",
+    "@prisma/client": "^7.0.0",
+    "pg": "^8.16.3"
   }
 }
