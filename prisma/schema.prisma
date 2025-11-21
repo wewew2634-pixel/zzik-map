@@ -1,0 +1,202 @@
+// ZZIK LIVE v4 - Unified Schema
+// GPS → QR → Reels → Reward 플로우
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+//
+// 공통 Enum
+//
+
+enum TrafficSignal {
+  GREEN
+  YELLOW
+  RED
+}
+
+enum MissionStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  ENDED
+}
+
+enum MissionRunStatus {
+  PENDING_GPS
+  PENDING_QR
+  PENDING_REELS
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+  EXPIRED
+  CANCELLED
+}
+
+enum WalletTxType {
+  MISSION_REWARD
+  ADJUSTMENT
+  WITHDRAWAL
+  DEPOSIT
+  REFUND
+}
+
+enum WalletTxStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+//
+// User (최소한의 auth 식별자만)
+//
+
+model User {
+  id             String        @id @default(cuid())
+  email          String?       @unique
+  phone          String?       @unique
+  authProvider   String?       // "kakao", "apple" 등
+  providerUserId String?       // 외부 ID
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  wallet         Wallet?
+  missionRuns    MissionRun[]
+}
+
+//
+// Place (장소)
+//
+
+model Place {
+  id            String         @id @default(cuid())
+  name          String
+  category      String
+  address       String?
+  latitude      Float
+  longitude     Float
+  isGold        Boolean        @default(false)
+  successRate   Int            @default(0)  // 0~100
+  missionsCount Int            @default(0)
+  trafficSignal TrafficSignal  @default(GREEN)
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  missions      Mission[]
+}
+
+//
+// Mission: 특정 장소에서 진행되는 캠페인/미션
+//
+
+model Mission {
+  id          String        @id @default(cuid())
+  place       Place         @relation(fields: [placeId], references: [id])
+  placeId     String
+
+  title       String
+  description String?
+  status      MissionStatus @default(DRAFT)
+
+  rewardAmount     Int           // 1회 리워드 포인트 (원 단위 or 포인트)
+  maxRunsPerUser   Int?          // null 이면 무제한
+  maxTotalRuns     Int?          // 전체 참가 횟수 제한 (null = 무제한)
+  startAt          DateTime?
+  endAt            DateTime?
+  verificationSpec Json          // { gps: true, qr: true, reels: true } 등
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  missionRuns MissionRun[]
+}
+
+//
+// MissionRun: 유저의 개별 미션 실행 인스턴스
+//
+
+model MissionRun {
+  id        String          @id @default(cuid())
+  mission   Mission         @relation(fields: [missionId], references: [id])
+  missionId String
+
+  user      User            @relation(fields: [userId], references: [id])
+  userId    String
+
+  status    MissionRunStatus @default(PENDING_GPS)
+
+  // 단계별 검증 타임스탬프
+  gpsVerifiedAt     DateTime?
+  qrVerifiedAt      DateTime?
+  reelsUploadedAt   DateTime?
+  reviewedAt        DateTime?
+  rejectedAt        DateTime?
+  rejectReason      String?
+
+  // 만료/타임아웃
+  expiresAt         DateTime?
+
+  // 리워드 관련
+  rewardAmount      Int?
+  rewardedAt        DateTime?
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  walletTransactions WalletTransaction[]
+
+  @@index([missionId, userId])
+}
+
+//
+// Wallet & Ledger
+//
+
+model Wallet {
+  id            String              @id @default(cuid())
+  user          User                @relation(fields: [userId], references: [id])
+  userId        String              @unique
+
+  balance       Int                 @default(0)  // 사용 가능 잔액
+  lockedBalance Int                 @default(0)  // 출금 대기 등
+  version       Int                 @default(1)  // optimistic locking 용
+
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  transactions  WalletTransaction[]
+}
+
+model WalletTransaction {
+  id             String          @id @default(cuid())
+  wallet         Wallet          @relation(fields: [walletId], references: [id])
+  walletId       String
+
+  type           WalletTxType
+  status         WalletTxStatus  @default(COMPLETED)
+  amount         Int             // signed: + 적립, - 차감
+  balanceBefore  Int
+  balanceAfter   Int
+
+  // 참조 ID (MissionRun, 정산 배치 등)
+  refType        String?         // "MissionRun", "PayoutBatch" 등
+  refId          String?
+
+  // 멱등성 키: 같은 요청이 중복 실행돼도 1회만 반영되도록
+  idempotencyKey String?         @unique
+
+  // MissionRun과의 관계 (선택)
+  missionRun     MissionRun?     @relation(fields: [missionRunId], references: [id])
+  missionRunId   String?
+
+  createdAt      DateTime        @default(now())
+
+  @@index([walletId, createdAt])
+}

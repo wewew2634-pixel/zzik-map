@@ -5,77 +5,7 @@ import { MapShell, MapOverlay, PlaceCard } from '@zzik/ui'
 import { MapboxCanvas } from '@/components/zzik-map/MapboxCanvas'
 import type { PlaceSummary } from '@/types/place'
 import { trackMapEvent, MapEventTypes } from '@/lib/analytics/map-events'
-
-const MOCK_PLACES: PlaceSummary[] = [
-  {
-    id: '1',
-    name: 'ZZIK LAB COFFEE',
-    category: '카페 · 스페셜티',
-    lng: 127.0565,
-    lat: 37.5446,
-    distanceMeters: 180,
-    trafficSignal: 'green',
-    isGold: true,
-    benefitLabel: '현장 릴스 미션',
-    benefitValue: '최대 5,000원 캐시백',
-    metrics: {
-      missions: 42,
-      successRate: 93,
-      likes: 128,
-    },
-  },
-  {
-    id: '2',
-    name: '언더그라운드 이자카야',
-    category: '이자카야 · 야간',
-    lng: 127.0595,
-    lat: 37.5456,
-    distanceMeters: 420,
-    trafficSignal: 'yellow',
-    isGold: false,
-    benefitLabel: '야간 방문 인증',
-    benefitValue: '2인 방문시 1잔 무료',
-    metrics: {
-      missions: 21,
-      successRate: 81,
-      likes: 64,
-    },
-  },
-  {
-    id: '3',
-    name: '성수 베이글 팩토리',
-    category: '베이커리 · 브런치',
-    lng: 127.0545,
-    lat: 37.5435,
-    distanceMeters: 520,
-    trafficSignal: 'green',
-    isGold: true,
-    benefitLabel: '아침 방문 인증',
-    benefitValue: '아메리카노 무료',
-    metrics: {
-      missions: 67,
-      successRate: 88,
-      likes: 203,
-    },
-  },
-  {
-    id: '4',
-    name: '서울숲 공원 산책로',
-    category: '공원 · 야외',
-    lng: 127.0375,
-    lat: 37.5445,
-    distanceMeters: 1850,
-    trafficSignal: 'red',
-    isGold: false,
-    benefitLabel: '산책 인증',
-    benefitValue: '없음',
-    metrics: {
-      missions: 15,
-      successRate: 72,
-      likes: 38,
-    },
-  },
-]
+import { usePlaces } from '@/hooks/usePlaces'
 
 const DEFAULT_CENTER: [number, number] = [127.0565, 37.5446] // 강남 기본 좌표
 
@@ -107,9 +37,17 @@ function applyFilter(places: PlaceSummary[], filter: FilterType): PlaceSummary[]
 }
 
 export default function MapPage() {
+  const { places, loading, error } = usePlaces()
   const [center, setCenter] = useState<[number, number]>(DEFAULT_CENTER)
   const [filter, setFilter] = useState<FilterType>('all')
-  const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(MOCK_PLACES[0]?.id ?? null)
+  const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null)
+
+  // Initialize selectedPlaceId when places are loaded
+  useEffect(() => {
+    if (places.length > 0 && !selectedPlaceId) {
+      setSelectedPlaceId(places[0].id)
+    }
+  }, [places, selectedPlaceId])
 
   // (B) Geolocation: 현재 위치 가져오기
   useEffect(() => {
@@ -150,8 +88,8 @@ export default function MapPage() {
 
   // (C) 필터링된 장소 목록
   const filteredPlaces = useMemo(
-    () => applyFilter(MOCK_PLACES, filter),
-    [filter]
+    () => applyFilter(places, filter),
+    [places, filter]
   )
 
   // 필터 변경 시 selectedPlaceId 조정
@@ -181,6 +119,39 @@ export default function MapPage() {
   const handlePlaceClick = (placeId: string) => {
     setSelectedPlaceId(placeId)
     trackMapEvent(MapEventTypes.CARD_CLICKED, { placeId })
+  }
+
+  // Show loading state
+  if (loading) {
+    return (
+      <MapShell
+        map={<div className="flex items-center justify-center h-full bg-zinc-900 text-white">로딩 중...</div>}
+        overlay={
+          <MapOverlay>
+            <div className="flex items-center justify-center py-8 text-sm text-zinc-400">
+              데이터를 불러오는 중...
+            </div>
+          </MapOverlay>
+        }
+      />
+    )
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <MapShell
+        map={<div className="flex items-center justify-center h-full bg-zinc-900 text-white">지도 로딩 실패</div>}
+        overlay={
+          <MapOverlay>
+            <div className="flex flex-col items-center justify-center py-8 text-sm text-zinc-400">
+              <p className="text-red-500">오류가 발생했습니다</p>
+              <p className="mt-2">{error}</p>
+            </div>
+          </MapOverlay>
+        }
+      />
+    )
   }
 
   return (
