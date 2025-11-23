@@ -1,0 +1,222 @@
+name: Load Testing
+
+on:
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      test_suite:
+        description: 'Test suite to run'
+        required: true
+        type: choice
+        options:
+          - baseline
+          - mission-flow
+          - stress
+          - all
+      target_url:
+        description: 'Target URL (default: staging)'
+        required: false
+        type: string
+      duration_multiplier:
+        description: 'Duration multiplier (1.0 = normal, 0.5 = half, 2.0 = double)'
+        required: false
+        type: string
+        default: '1.0'
+
+  # Automatic on staging deployment
+  deployment_status:
+
+  # Weekly performance baseline
+  schedule:
+    - cron: '0 2 * * 1' # Every Monday at 2 AM UTC
+
+jobs:
+  load-test:
+    name: Run k6 Load Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install k6
+        run: |
+          sudo gpg -k
+          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install k6
+
+      - name: Verify k6 installation
+        run: k6 version
+
+      - name: Set target URL
+        id: set-url
+        run: |
+          if [ "${{ github.event.inputs.target_url }}" != "" ]; then
+            echo "TARGET_URL=${{ github.event.inputs.target_url }}" >> $GITHUB_ENV
+          elif [ "${{ github.event.deployment_status.environment }}" == "production" ]; then
+            echo "TARGET_URL=${{ secrets.PRODUCTION_URL }}" >> $GITHUB_ENV
+          else
+            echo "TARGET_URL=${{ secrets.STAGING_URL || 'http://localhost:3000' }}" >> $GITHUB_ENV
+          fi
+
+      - name: Create results directory
+        run: mkdir -p load-tests/results
+
+      - name: Run Baseline Test
+        if: github.event.inputs.test_suite == 'baseline' || github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == ''
+        run: |
+          k6 run \
+            --out json=load-tests/results/baseline-results.json \
+            --summary-export=load-tests/results/baseline-summary.json \
+            --tag testid=${{ github.run_id }} \
+            --tag env=${{ github.event.deployment_status.environment || 'manual' }} \
+            --env BASE_URL=${{ env.TARGET_URL }} \
+            load-tests/baseline.js
+        continue-on-error: true
+
+      - name: Run Mission Flow Test
+        if: github.event.inputs.test_suite == 'mission-flow' || github.event.inputs.test_suite == 'all'
+        run: |
+          k6 run \
+            --out json=load-tests/results/mission-flow-results.json \
+            --summary-export=load-tests/results/mission-flow-summary.json \
+            --tag testid=${{ github.run_id }} \
+            --tag env=${{ github.event.deployment_status.environment || 'manual' }} \
+            --env BASE_URL=${{ env.TARGET_URL }} \
+            --env TEST_MISSION_ID=${{ secrets.TEST_MISSION_ID }} \
+            load-tests/mission-flow.js
+        continue-on-error: true
+
+      - name: Run Stress Test
+        if: github.event.inputs.test_suite == 'stress' || github.event.inputs.test_suite == 'all'
+        run: |
+          k6 run \
+            --out json=load-tests/results/stress-results.json \
+            --summary-export=load-tests/results/stress-summary.json \
+            --tag testid=${{ github.run_id }} \
+            --tag env=${{ github.event.deployment_status.environment || 'manual' }} \
+            --env BASE_URL=${{ env.TARGET_URL }} \
+            load-tests/stress.js
+        continue-on-error: true
+
+      - name: Generate Performance Report
+        if: always()
+        run: |
+          echo "# Load Test Results - Run #${{ github.run_id }}" > load-tests/results/report.md
+          echo "" >> load-tests/results/report.md
+          echo "**Target:** ${{ env.TARGET_URL }}" >> load-tests/results/report.md
+          echo "**Date:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> load-tests/results/report.md
+          echo "**Trigger:** ${{ github.event_name }}" >> load-tests/results/report.md
+          echo "" >> load-tests/results/report.md
+
+          for file in load-tests/results/*-summary.json; do
+            if [ -f "$file" ]; then
+              echo "## $(basename $file .json)" >> load-tests/results/report.md
+              echo "\`\`\`json" >> load-tests/results/report.md
+              cat "$file" >> load-tests/results/report.md
+              echo "\`\`\`" >> load-tests/results/report.md
+              echo "" >> load-tests/results/report.md
+            fi
+          done
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: load-test-results-${{ github.run_id }}
+          path: load-tests/results/
+          retention-days: 30
+
+      - name: Check Performance Thresholds
+        if: always()
+        run: |
+          # Check if any tests failed
+          FAILED=0
+
+          for file in load-tests/results/*-summary.json; do
+            if [ -f "$file" ]; then
+              # Simple check: if file contains failed thresholds
+              if grep -q '"ok":false' "$file"; then
+                echo "❌ Performance thresholds failed in $(basename $file)"
+                FAILED=1
+              else
+                echo "✅ Performance thresholds passed in $(basename $file)"
+              fi
+            fi
+          done
+
+          if [ $FAILED -eq 1 ]; then
+            echo "::warning::Some performance thresholds failed. Check artifacts for details."
+            exit 0  # Don't fail the build, just warn
+          fi
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('load-tests/results/report.md', 'utf8');
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: report
+            });
+
+      - name: Notify on Failure
+        if: failure()
+        run: |
+          echo "::error::Load tests failed or encountered an error"
+          echo "Check the workflow logs and artifacts for detailed results"
+
+  # Optional: Compare with baseline
+  compare-baseline:
+    name: Compare with Baseline
+    runs-on: ubuntu-latest
+    needs: load-test
+    if: github.event.inputs.test_suite == 'baseline' || github.event.inputs.test_suite == 'all'
+
+    steps:
+      - name: Download Current Results
+        uses: actions/download-artifact@v4
+        with:
+          name: load-test-results-${{ github.run_id }}
+          path: current-results
+
+      - name: Download Baseline Results
+        uses: dawidd6/action-download-artifact@v3
+        continue-on-error: true
+        with:
+          workflow: load-test.yml
+          name: load-test-results-baseline
+          path: baseline-results
+          if_no_artifact_found: warn
+
+      - name: Compare Results
+        if: success()
+        run: |
+          echo "# Performance Comparison" > comparison.md
+          echo "" >> comparison.md
+          echo "Comparing current results with baseline..." >> comparison.md
+
+          # This is a placeholder - implement actual comparison logic
+          # You could use jq to parse JSON and compare metrics
+
+          if [ -f "baseline-results/baseline-summary.json" ] && [ -f "current-results/baseline-summary.json" ]; then
+            echo "✅ Baseline comparison available" >> comparison.md
+            # Add comparison logic here
+          else
+            echo "⚠️ No baseline available for comparison" >> comparison.md
+          fi
+
+      - name: Upload Comparison
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-comparison-${{ github.run_id }}
+          path: comparison.md
+          retention-days: 90

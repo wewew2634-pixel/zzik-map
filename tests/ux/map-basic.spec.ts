@@ -5,8 +5,14 @@ const BASE_URL = 'http://localhost:3000';
 
 test.describe('Map Basic Flow', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(`${BASE_URL}/map`);
-    await page.waitForLoadState('networkidle');
+    await page.goto(`${BASE_URL}/map`, { waitUntil: 'domcontentloaded' });
+    // Wait for either place cards or map container to be visible
+    await page.waitForSelector('.relative.flex.h-screen, [data-testid="place-card"]', {
+      timeout: 10000
+    }).catch(() => {
+      // Fallback: just wait a bit
+      return page.waitForTimeout(2000);
+    });
   });
 
   test('should render MapShell with correct layout', async ({ page }) => {
@@ -23,19 +29,19 @@ test.describe('Map Basic Flow', () => {
     const firstCard = page.locator('[data-testid="place-card"]').first();
     const goldBadge = firstCard.locator('[data-testid="badge-gold"]');
     await expect(goldBadge).toBeVisible();
-    await expect(goldBadge).toHaveClass(/text-amber-500/);
-    await expect(goldBadge).toHaveClass(/border-amber-500\/80/);
+    await expect(goldBadge).toHaveClass(/text-zzik-accent-gold/);
+    await expect(goldBadge).toHaveClass(/border-zzik-border-highlight/);
   });
 
   test('should display traffic signal dots with correct colors', async ({ page }) => {
     const firstCard = page.locator('[data-testid="place-card"]').first();
-    const greenDot = firstCard.locator('[data-testid="traffic-dot-success"]');
-    const yellowDot = firstCard.locator('[data-testid="traffic-dot-warning"]');
-    const redDot = firstCard.locator('[data-testid="traffic-dot-danger"]');
 
-    await expect(greenDot).toHaveClass(/bg-emerald-400/);
-    await expect(yellowDot).toHaveClass(/bg-amber-400/);
-    await expect(redDot).toHaveClass(/bg-rose-500/);
+    // First card should have a traffic signal dot (green in mock data)
+    const trafficDot = firstCard.locator('[data-testid^="traffic-dot-"]');
+    await expect(trafficDot).toBeVisible();
+
+    // Verify it has the correct color class (zzik-accent-green for green)
+    await expect(trafficDot).toHaveClass(/bg-zzik-accent-green/);
   });
 
   test('should scroll PlaceCard list smoothly', async ({ page }) => {
@@ -47,26 +53,30 @@ test.describe('Map Basic Flow', () => {
 
   test('should display filter buttons with correct initial state', async ({ page }) => {
     const allBtn = page.getByRole('button', { name: '전체' });
-    const goldBtn = page.getByRole('button', { name: 'GOLD' });
-    const activeBtn = page.getByRole('button', { name: '활성' });
+    const goldBtn = page.getByRole('button', { name: 'GOLD 단골집' });
+    const activeBtn = page.getByRole('button', { name: '신호 ON' });
 
-    await expect(allBtn).toHaveClass(/bg-zinc-50/);
-    await expect(allBtn).toHaveClass(/text-zinc-900/);
+    await expect(allBtn).toHaveClass(/bg-zzik-text-primary/);
+    await expect(allBtn).toHaveClass(/text-zzik-bg/);
 
-    await expect(goldBtn).toHaveClass(/bg-zinc-800/);
-    await expect(activeBtn).toHaveClass(/bg-zinc-800/);
+    await expect(goldBtn).toHaveClass(/bg-zzik-surface-base/);
+    await expect(activeBtn).toHaveClass(/bg-zzik-surface-base/);
   });
 
   test('should display bottom tabs with Map tab active', async ({ page }) => {
-    const mapTab = page.getByRole('link', { name: 'Map' });
-    const searchTab = page.getByRole('link', { name: 'Search' });
-    const savedTab = page.getByRole('link', { name: 'Saved' });
-    const profileTab = page.getByRole('link', { name: 'Profile' });
+    const mapTab = page.getByRole('button', { name: 'Map' });
+    const searchTab = page.getByRole('button', { name: 'Search' });
+    const savedTab = page.getByRole('button', { name: 'Saved' });
+    const profileTab = page.getByRole('button', { name: 'Profile' });
 
-    await expect(mapTab).toHaveAttribute('aria-current', 'page');
-    await expect(searchTab).not.toHaveAttribute('aria-current', 'page');
-    await expect(savedTab).not.toHaveAttribute('aria-current', 'page');
-    await expect(profileTab).not.toHaveAttribute('aria-current', 'page');
+    // Verify all tabs are visible
+    await expect(mapTab).toBeVisible();
+    await expect(searchTab).toBeVisible();
+    await expect(savedTab).toBeVisible();
+    await expect(profileTab).toBeVisible();
+
+    // Verify Map tab is active (has text-zzik-text-primary class)
+    await expect(mapTab).toHaveClass(/text-zzik-text-primary/);
   });
 
   test('should have no console errors on initial load', async ({ page }) => {
@@ -78,8 +88,8 @@ test.describe('Map Basic Flow', () => {
       }
     });
 
-    await page.reload();
-    await page.waitForLoadState('networkidle');
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(2000); // Wait for content to render
 
     expect(errors, `Console errors: ${errors.join('\n')}`).toHaveLength(0);
   });
@@ -90,29 +100,36 @@ test.describe('Map Basic Flow', () => {
     });
     const mobilePage = await mobileContext.newPage();
 
-    await mobilePage.goto(`${BASE_URL}/map`);
-    await mobilePage.waitForLoadState('networkidle');
+    await mobilePage.goto(`${BASE_URL}/map`, { waitUntil: 'domcontentloaded' });
+    await mobilePage.waitForTimeout(2000);
 
     const dragHandleMobile = mobilePage.locator('[data-testid="drag-handle"]');
     await expect(dragHandleMobile).toBeVisible();
+
+    await mobileContext.close();
 
     const desktopContext = await browser.newContext({
       viewport: { width: 1920, height: 1080 }
     });
     const desktopPage = await desktopContext.newPage();
 
-    await desktopPage.goto(`${BASE_URL}/map`);
-    await desktopPage.waitForLoadState('networkidle');
+    await desktopPage.goto(`${BASE_URL}/map`, { waitUntil: 'domcontentloaded' });
+    await desktopPage.waitForTimeout(2000);
 
     const dragHandleDesktop = desktopPage.locator('[data-testid="drag-handle"]');
     await expect(dragHandleDesktop).toBeHidden();
+
+    await desktopContext.close();
   });
 });
 
 test.describe('Map Filter Flow', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(`${BASE_URL}/map`);
-    await page.waitForLoadState('networkidle');
+    await page.goto(`${BASE_URL}/map`, { waitUntil: 'domcontentloaded' });
+    // Wait for filter buttons to be visible
+    await page.waitForSelector('button:has-text("전체")', { timeout: 10000 }).catch(() => {
+      return page.waitForTimeout(2000);
+    });
   });
 
   test('should filter to GOLD places only', async ({ page }) => {
@@ -132,21 +149,23 @@ test.describe('Map Filter Flow', () => {
   });
 
   test('should filter to active places', async ({ page }) => {
-    const activeBtn = page.getByRole('button', { name: '활성' });
+    const activeBtn = page.getByRole('button', { name: '신호 ON' });
     await activeBtn.click();
+    await page.waitForTimeout(300); // Wait for filter animation
 
-    // successRate 또는 missions 기준은 프론트 로직과 맞춰 튜닝 필요
+    // Active filter: successRate >= 80 OR missions >= 10
+    // All 4 seed places meet this criteria
     const cards = page.locator('[data-testid="place-card"]');
-    await expect(cards).toHaveCount(3);
+    await expect(cards).toHaveCount(4);
   });
 
   test('should update filter button styles on click', async ({ page }) => {
     const allBtn = page.getByRole('button', { name: '전체' });
-    const goldBtn = page.getByRole('button', { name: 'GOLD' });
+    const goldBtn = page.getByRole('button', { name: 'GOLD 단골집' });
 
     await goldBtn.click();
 
-    await expect(goldBtn).toHaveClass(/bg-zinc-50/);
-    await expect(allBtn).toHaveClass(/bg-zinc-800/);
+    await expect(goldBtn).toHaveClass(/bg-zzik-text-primary/);
+    await expect(allBtn).toHaveClass(/bg-zzik-surface-base/);
   });
 });

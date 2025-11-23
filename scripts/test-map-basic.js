@@ -38,12 +38,11 @@ async function runTest() {
     // Launch browser
     console.log('Step 1: Launching browser...');
     browser = await chromium.launch({
-      headless: true,
+      headless: false,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu'
+        '--disable-dev-shm-usage'
       ]
     });
     const context = await browser.newContext({
@@ -66,8 +65,8 @@ async function runTest() {
 
     // Navigate to map page
     console.log('Step 2: Navigating to http://localhost:3000/map...');
-    await page.goto('http://localhost:3000/map', { waitUntil: 'networkidle', timeout: 10000 });
-    await page.waitForTimeout(2000); // Wait for render
+    await page.goto('http://localhost:3000/map', { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await page.waitForTimeout(3000); // Wait for Mapbox and components to render
 
     const screenshotPath = path.join(SCREENSHOT_DIR, 'MAP_BASIC_FLOW_step1_initial.png');
     await page.screenshot({ path: screenshotPath, fullPage: false });
@@ -82,7 +81,8 @@ async function runTest() {
 
     // Assertion 1: Check PlaceCard count
     console.log('\nAssertion 1: Checking PlaceCard count...');
-    const placeCards = await page.locator('[data-testid="place-card"]').count();
+    // Use CSS selector based on PlaceCard structure
+    const placeCards = await page.locator('.rounded-xl.bg-zinc-900.shadow-sm.ring-1').count();
     const assertion1 = {
       id: 1,
       assertion: 'PlaceCard 렌더링 개수',
@@ -108,8 +108,8 @@ async function runTest() {
 
     // Assertion 5: Check GOLD badge style
     console.log('\nAssertion 5: Checking GOLD badge style...');
-    const goldBadge = page.locator('[data-testid="place-card"]').first().locator('text=GOLD');
-    const goldBadgeCount = await goldBadge.count();
+    const goldBadge = page.locator('text=GOLD').first();
+    const goldBadgeCount = await page.locator('text=GOLD').count();
 
     let goldBadgeClass = '';
     let hasAmberText = false;
@@ -135,7 +135,7 @@ async function runTest() {
     // Click first card
     console.log('\nStep 3: Clicking first PlaceCard...');
     if (placeCards > 0) {
-      const firstCard = page.locator('[data-testid="place-card"]').first();
+      const firstCard = page.locator('.rounded-xl.bg-zinc-900.shadow-sm.ring-1').first();
       await firstCard.click();
       await page.waitForTimeout(1500); // Wait for flyTo animation
 

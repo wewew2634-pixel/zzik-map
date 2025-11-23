@@ -1,0 +1,18 @@
+# k6 Load Test Results
+results/*.json
+results/*.csv
+results/*.html
+results/*.xml
+
+# Keep the directory structure
+!results/.gitkeep
+
+# Temporary files
+*.tmp
+*.log
+
+# k6 cloud results
+cloud-results/
+
+# Performance comparison files
+*.comparison.json

@@ -2,13 +2,32 @@
 
 import { handleApi } from "@/app/api/_utils/handleApi";
 import { approveMissionRunAndReward } from "@/core/missions/service";
+import { getUserIdFromRequestLoose } from "@/core/auth/jwt";
+import { checkRateLimit, addRateLimitHeaders } from "@/middleware/ratelimit";
+import { adminMutationRateLimiter } from "@/lib/ratelimit";
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
+  // Authenticate user first
+  const userId = getUserIdFromRequestLoose(req);
+
+  // Check rate limit for admin mutations
+  const rateLimitResult = await checkRateLimit(
+    `admin-mutation:${userId}`,
+    adminMutationRateLimiter,
+  );
+
+  const headers = new Headers();
+  addRateLimitHeaders(headers, rateLimitResult);
+
   return handleApi(async () => {
-    const missionRunId = params.id;
+    const { id: missionRunId } = await params;
+
+    // Verify permission
+    const { requirePermission } = await import("@/core/auth/rbac");
+    await requirePermission(userId, "mission:approve");
 
     // Generate idempotency key from request headers or body
     const idempotencyKey = req.headers.get("idempotency-key") ?? crypto.randomUUID();
@@ -22,5 +41,5 @@ export async function POST(
       missionRun: result.run,
       transaction: result.tx,
     };
-  });
+  }, { headers });
 }

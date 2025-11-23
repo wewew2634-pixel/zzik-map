@@ -14,7 +14,11 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(function Card(
     <div
       ref={ref}
       className={clsx(
-        'rounded-xl bg-zinc-900 shadow-sm ring-1 ring-white/10',
+        // v4 Design: L2 Content layer with depth tokens
+        'rounded-zzik-depth-md bg-zzik-surface-content',
+        'border border-zzik-border-content',
+        'shadow-zzik-depth-elevation-02',
+        'z-zzik-depth-02',
         className
       )}
       {...props}

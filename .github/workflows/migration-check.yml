@@ -1,0 +1,154 @@
+name: Database Migration Check
+
+on:
+  pull_request:
+    paths:
+      - 'prisma/schema.prisma'
+      - 'prisma/migrations/**'
+
+env:
+  DATABASE_URL: postgresql://zzik:zzik_pw@localhost:5432/zzikmap_migration_test?schema=public
+
+jobs:
+  migration-safety:
+    name: Check Migration Safety
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: zzik
+          POSTGRES_PASSWORD: zzik_pw
+          POSTGRES_DB: zzikmap_migration_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 전체 히스토리 필요 (base 브랜치와 비교)
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: pnpm prisma generate
+
+      - name: Check for pending migrations
+        id: check_migrations
+        run: |
+          # 새로운 migration 파일 확인
+          NEW_MIGRATIONS=$(git diff --name-only origin/${{ github.base_ref }} HEAD | grep 'prisma/migrations/' || true)
+          if [ -z "$NEW_MIGRATIONS" ]; then
+            echo "has_new_migrations=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_new_migrations=true" >> $GITHUB_OUTPUT
+            echo "New migrations found:"
+            echo "$NEW_MIGRATIONS"
+          fi
+
+      - name: Deploy migrations (dry run simulation)
+        if: steps.check_migrations.outputs.has_new_migrations == 'true'
+        run: |
+          echo "::group::Migration deployment test"
+          pnpm prisma migrate deploy
+          echo "::endgroup::"
+
+      - name: Validate schema against DB
+        run: pnpm prisma validate
+
+      - name: Check for dangerous operations
+        if: steps.check_migrations.outputs.has_new_migrations == 'true'
+        run: |
+          echo "::group::Checking for dangerous SQL operations"
+          # 위험한 SQL 패턴 검사
+          DANGEROUS_PATTERNS="DROP TABLE|DROP COLUMN|ALTER COLUMN.*DROP|TRUNCATE"
+
+          for migration_file in prisma/migrations/*/migration.sql; do
+            if grep -iE "$DANGEROUS_PATTERNS" "$migration_file"; then
+              echo "⚠️  WARNING: Potentially dangerous operation detected in $migration_file"
+              echo "Please review carefully and ensure proper data migration strategy."
+              grep -iE "$DANGEROUS_PATTERNS" "$migration_file"
+            fi
+          done
+          echo "::endgroup::"
+
+      - name: Test migration rollback capability
+        if: steps.check_migrations.outputs.has_new_migrations == 'true'
+        run: |
+          echo "::group::Testing rollback scenario"
+          # 새 DB 인스턴스로 이전 상태 테스트
+          echo "Note: Prisma doesn't support rollback. Manual rollback plan required for production."
+          echo "::endgroup::"
+
+  schema-diff:
+    name: Schema Diff Report
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate schema diff
+        run: |
+          echo "::group::Prisma Schema Changes"
+          git diff origin/${{ github.base_ref }} HEAD -- prisma/schema.prisma || echo "No schema changes"
+          echo "::endgroup::"
+
+      - name: Comment PR with migration info
+        if: steps.check_migrations.outputs.has_new_migrations == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const output = `### 🗄️ Database Migration Detected
+
+            New migration files have been added. Please ensure:
+            - [ ] Migration has been tested locally
+            - [ ] Rollback plan is documented
+            - [ ] Production deployment plan is ready
+            - [ ] Breaking changes are communicated to team
+
+            **Review the migration files carefully before merging.**
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            });

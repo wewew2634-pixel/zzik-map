@@ -12,8 +12,11 @@ export function BottomTabs({ children, className }: BottomTabsProps) {
   return (
     <nav
       className={clsx(
+        // v4 Design: L1 Base layer
         'flex items-center justify-around',
-        'border-t border-zinc-800 bg-zinc-900',
+        'border-t border-zzik-border-base bg-zzik-surface-base',
+        'shadow-zzik-depth-elevation-01',
+        'z-zzik-depth-01',
         'px-2 pb-safe pt-2',
         className
       )}
@@ -36,11 +39,11 @@ export function BottomTabItem({ icon, label, active, onClick, className }: Botto
     <button
       onClick={onClick}
       className={clsx(
-        'flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-lg px-3 py-2',
-        'text-xs font-medium transition-colors',
+        'flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-zzik-depth-sm px-3 py-2',
+        'text-xs font-medium transition-colors duration-200',
         active
-          ? 'text-white'
-          : 'text-zinc-400 hover:text-zinc-300',
+          ? 'text-zzik-text-primary'
+          : 'text-zzik-text-secondary hover:text-zzik-text-primary/80',
         className
       )}
     >
@@ -48,7 +51,7 @@ export function BottomTabItem({ icon, label, active, onClick, className }: Botto
         <div
           className={clsx(
             'flex size-6 items-center justify-center',
-            active ? 'text-white' : 'text-zinc-400'
+            active ? 'text-zzik-text-primary' : 'text-zzik-text-secondary'
           )}
         >
           {icon}

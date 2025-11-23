@@ -5,68 +5,63 @@ import React from 'react'
 
 type MapShellProps = {
   map?: React.ReactNode
-  overlay?: React.ReactNode
-  bottomTabs?: React.ReactNode
+  searchBar?: React.ReactNode
+  bottomPanel?: React.ReactNode
   className?: string
 }
 
-export function MapShell({ map, overlay, bottomTabs, className }: MapShellProps) {
+/**
+ * MapShell - Map page layout following zzik.depth design system
+ *
+ * Structure:
+ * - Map Layer (L0/L1 - absolute inset-0)
+ * - Search Bar (L2 - absolute top, z-zzik-depth-03)
+ * - Bottom Panel (L2 - absolute bottom, z-zzik-depth-02)
+ */
+export function MapShell({ map, searchBar, bottomPanel, className }: MapShellProps) {
   return (
-    <div className={clsx('relative flex h-screen w-full flex-col overflow-hidden', className)}>
-      {/* Map Layer - Full screen background */}
-      <div className="absolute inset-0 z-0 bg-zinc-900">
+    <div className={clsx('relative h-full', className)}>
+      {/* Map Layer - Full background */}
+      <div className="absolute inset-0">
         {map || (
-          <div className="flex h-full items-center justify-center text-zinc-400">
-            <span>Map Placeholder</span>
+          <div className="h-full w-full bg-[#0B0F1A] flex items-center justify-center text-zzik-text-secondary">
+            Map placeholder
           </div>
         )}
       </div>
 
-      {/* Overlay Layer - Bottom on mobile, Right on desktop */}
-      <div className="pointer-events-none relative z-10 flex h-full flex-col">
-        {/* Spacer to push overlay to bottom on mobile */}
-        <div className="flex-1" />
-
-        {/* Overlay Content */}
+      {/* Search Bar - Top floating */}
+      {searchBar && (
         <div
           className={clsx(
-            'pointer-events-auto',
-            'flex flex-col',
-            // Mobile: bottom sheet
-            'max-h-[60vh] rounded-t-2xl bg-zinc-900 shadow-md',
-            // Desktop: right panel
-            'md:ml-auto md:h-full md:max-h-full md:w-96 md:rounded-none md:rounded-l-2xl'
+            'absolute inset-x-4 top-3 z-zzik-depth-03',
+            'rounded-zzik-depth-md border border-zzik-border-base',
+            'bg-zzik-surface-base/95 shadow-zzik-depth-elevation-02',
+            'px-3 py-2 flex items-center gap-2 text-[11px]'
           )}
         >
-          {overlay}
-        </div>
-      </div>
-
-      {/* Bottom Tabs - Mobile only */}
-      {bottomTabs && (
-        <div className="pointer-events-auto absolute bottom-0 left-0 right-0 z-20 md:hidden">
-          {bottomTabs}
+          {searchBar}
         </div>
       )}
-    </div>
-  )
-}
 
-type MapOverlayProps = {
-  children: React.ReactNode
-  className?: string
-}
-
-export function MapOverlay({ children, className }: MapOverlayProps) {
-  return (
-    <div className={clsx('flex flex-1 flex-col overflow-hidden', className)}>
-      {/* Drag Handle - Mobile only */}
-      <div className="flex items-center justify-center py-2 md:hidden">
-        <div className="h-1 w-8 rounded-full bg-zinc-700/80" />
-      </div>
-
-      {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto px-4 pb-4">{children}</div>
+      {/* Bottom Panel - List panel */}
+      {bottomPanel && (
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-zzik-depth-02 flex justify-center">
+          <div
+            className={clsx(
+              'pointer-events-auto w-full max-w-md',
+              'bg-zzik-surface-base/95 border-t border-zzik-border-base',
+              'shadow-zzik-depth-elevation-02',
+              'rounded-t-zzik-depth-xl',
+              'px-4 pt-3 pb-4'
+            )}
+          >
+            {/* Drag handle */}
+            <div className="mb-2 h-1 w-12 mx-auto rounded-full bg-white/14" />
+            {bottomPanel}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

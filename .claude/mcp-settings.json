@@ -1,0 +1,138 @@
+{
+  "mcpServers": {
+    "postgres": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "postgresql://zzik:zzik_pw@localhost:5432/zzikmap?schema=public&connect_timeout=10&pool_timeout=10&statement_timeout=30000"
+      ],
+      "env": {
+        "PGCONNECT_TIMEOUT": "10",
+        "PGSTATEMENT_TIMEOUT": "30000"
+      },
+      "timeout": 30000
+    },
+    "prisma": {
+      "command": "npx",
+      "args": ["@prisma/mcp-server"],
+      "env": {
+        "PRISMA_SCHEMA_PATH": "/home/ubuntu/work/zzik-map/prisma/schema.prisma",
+        "DATABASE_URL": "postgresql://zzik:zzik_pw@localhost:5432/zzikmap?schema=public&connect_timeout=10"
+      },
+      "timeout": 30000
+    },
+    "redis": {
+      "command": "npx",
+      "args": ["-y", "@redis/mcp-server"],
+      "env": {
+        "REDIS_HOST": "localhost",
+        "REDIS_PORT": "6379",
+        "REDIS_DB": "0",
+        "REDIS_USERNAME": "",
+        "REDIS_PWD": "",
+        "REDIS_CONNECT_TIMEOUT": "5000",
+        "REDIS_COMMAND_TIMEOUT": "5000"
+      },
+      "timeout": 10000
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "ghp_REPLACE_WITH_YOUR_TOKEN"
+      },
+      "disabled": true,
+      "note": "Replace GITHUB_PERSONAL_ACCESS_TOKEN with your actual GitHub PAT, then set disabled: false"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@executeautomation/playwright-mcp-server@latest"],
+      "env": {
+        "NODE_ENV": "production"
+      },
+      "timeout": 60000,
+      "disabled": false,
+      "note": "Browser automation and screenshot capture"
+    },
+    "puppeteer": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-puppeteer"],
+      "timeout": 60000,
+      "disabled": true,
+      "note": "Alternative browser automation server"
+    },
+    "fetch": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-fetch"],
+      "timeout": 30000,
+      "disabled": false,
+      "note": "Fetch URLs and web content"
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/home/ubuntu/work/zzik-map"
+      ],
+      "timeout": 30000,
+      "disabled": false,
+      "note": "Fast file exploration, search, and operations"
+    }
+  },
+  "installedSkills": [
+    "frontend-design",
+    "theme-factory",
+    "document-skills",
+    "backend-development",
+    "web-frameworks",
+    "claude-nextjs-skills",
+    "tailwind-expert",
+    "zzik-design-system"
+  ],
+  "projectInfo": {
+    "name": "ZZIK Map",
+    "description": "외국인 관광객 특화 위치기반 스테이블코인 결제 플랫폼 (Google Maps for Korea + Web3 Payments)",
+    "techStack": "Next.js 14.2, React 19, Prisma 7, PostgreSQL 17, ethers.js, Polygon Network",
+    "primaryLanguages": ["TypeScript", "JavaScript"],
+    "architecture": {
+      "frontend": "Next.js 14.2 App Router, React 19, PWA",
+      "backend": "Node.js, PostgreSQL 17, Prisma 7",
+      "blockchain": "ethers.js, Polygon Network (USDT/USDC), MetaMask integration",
+      "ai": "OpenAI GPT-4 (Agentic Commerce), Google Translate API (42 languages)",
+      "maps": "Google Maps SDK (외국인 특화)",
+      "fds": "Chainalysis API (자금세탁방지)",
+      "dual_entity": "ZZIK Korea (KRW) + ZZIK Global (USDT/USDC, AIFC license)"
+    },
+    "codePatterns": {
+      "apiRoutes": "handleApi wrapper, getUserIdFromRequestLoose, requirePermission/requireAdmin",
+      "testing": "node:test framework (NO Jest/Vitest), testPrisma from setup.ts",
+      "caching": "cache-aside pattern, stats:* (30s), place:* (5min)",
+      "validation": "Zod schemas with .parse()",
+      "imports": "Dynamic imports for heavy modules (await import)"
+    },
+    "criticalRules": [
+      "ALWAYS use handleApi wrapper for Route Handlers",
+      "ALWAYS use testPrisma in tests (NEVER direct prisma import)",
+      "NEVER skip authentication/authorization checks",
+      "NEVER create security vulnerabilities (SQL injection, XSS, etc.)",
+      "PREFER simple solutions over complex abstractions"
+    ],
+    "performance": {
+      "targets": "API < 200ms (cached), < 1s (uncached), cache hit rate > 70%",
+      "optimizations": "Connection pooling (20), Redis caching (293x), strategic indexes"
+    }
+  },
+  "agentPreferences": {
+    "backend": {
+      "agent": "zzik-backend",
+      "mcps": ["postgres", "prisma", "redis"],
+      "skills": ["backend-development", "web-frameworks"]
+    },
+    "frontend": {
+      "mcps": [],
+      "skills": ["frontend-design", "tailwind-expert", "zzik-design-system", "claude-nextjs-skills"]
+    }
+  }
+}

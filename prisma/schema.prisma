@@ -1,6 +1,3 @@
-// ZZIK LIVE v4 - Unified Schema
-// GPS → QR → Reels → Reward 플로우
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,9 +6,120 @@ datasource db {
   provider = "postgresql"
 }
 
-//
-// 공통 Enum
-//
+model User {
+  id                String       @id @default(cuid())
+  name              String?
+  email             String?      @unique
+  phone             String?      @unique
+  authProvider      String?
+  providerUserId    String?
+  role              String       @default("USER") // USER, ADMIN, SUPER_ADMIN
+  deletedAt         DateTime?
+  deletionScheduled DateTime?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  missionRuns       MissionRun[]
+  wallet            Wallet?
+
+  @@index([role])
+  @@index([email])
+}
+
+model Place {
+  id            String        @id @default(cuid())
+  name          String
+  category      String
+  address       String?
+  latitude      Float
+  longitude     Float
+  isGold        Boolean       @default(false)
+  successRate   Int           @default(0)
+  missionsCount Int           @default(0)
+  trafficSignal TrafficSignal @default(GREEN)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  missions      Mission[]
+}
+
+model Mission {
+  id               String        @id @default(cuid())
+  placeId          String
+  title            String
+  description      String?
+  status           MissionStatus @default(DRAFT)
+  rewardAmount     Int
+  maxRunsPerUser   Int?
+  maxTotalRuns     Int?
+  startAt          DateTime?
+  endAt            DateTime?
+  verificationSpec Json
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  place            Place         @relation(fields: [placeId], references: [id])
+  missionRuns      MissionRun[]
+
+  @@index([status, startAt, endAt])
+  @@index([placeId, status])
+}
+
+model MissionRun {
+  id                 String              @id @default(cuid())
+  missionId          String
+  userId             String
+  status             MissionRunStatus    @default(PENDING_GPS)
+  gpsVerifiedAt      DateTime?
+  qrVerifiedAt       DateTime?
+  reelsUploadedAt    DateTime?
+  reviewedAt         DateTime?
+  rejectedAt         DateTime?
+  rejectReason       String?
+  expiresAt          DateTime?
+  rewardAmount       Int?
+  rewardedAt         DateTime?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  activeLockKey      String?
+  mission            Mission             @relation(fields: [missionId], references: [id])
+  user               User                @relation(fields: [userId], references: [id])
+  walletTransactions WalletTransaction[]
+
+  @@index([missionId, userId])
+  @@index([status, expiresAt])
+  @@index([userId, status])
+  @@index([activeLockKey])
+}
+
+model Wallet {
+  id            String              @id @default(cuid())
+  userId        String              @unique
+  balance       Int                 @default(0)
+  lockedBalance Int                 @default(0)
+  version       Int                 @default(1)
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  user          User                @relation(fields: [userId], references: [id])
+  transactions  WalletTransaction[]
+}
+
+model WalletTransaction {
+  id             String         @id @default(cuid())
+  walletId       String
+  type           WalletTxType
+  status         WalletTxStatus @default(COMPLETED)
+  amount         Int
+  balanceBefore  Int
+  balanceAfter   Int
+  refType        String?
+  refId          String?
+  idempotencyKey String?        @unique
+  missionRunId   String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  missionRun     MissionRun?    @relation(fields: [missionRunId], references: [id])
+  wallet         Wallet         @relation(fields: [walletId], references: [id])
+
+  @@index([walletId, createdAt])
+}
 
 enum TrafficSignal {
   GREEN
@@ -52,151 +160,17 @@ enum WalletTxStatus {
   CANCELLED
 }
 
-//
-// User (최소한의 auth 식별자만)
-//
-
-model User {
-  id             String        @id @default(cuid())
-  email          String?       @unique
-  phone          String?       @unique
-  authProvider   String?       // "kakao", "apple" 등
-  providerUserId String?       // 외부 ID
-
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-
-  wallet         Wallet?
-  missionRuns    MissionRun[]
-}
-
-//
-// Place (장소)
-//
-
-model Place {
-  id            String         @id @default(cuid())
-  name          String
-  category      String
-  address       String?
-  latitude      Float
-  longitude     Float
-  isGold        Boolean        @default(false)
-  successRate   Int            @default(0)  // 0~100
-  missionsCount Int            @default(0)
-  trafficSignal TrafficSignal  @default(GREEN)
-
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-
-  missions      Mission[]
-}
-
-//
-// Mission: 특정 장소에서 진행되는 캠페인/미션
-//
-
-model Mission {
-  id          String        @id @default(cuid())
-  place       Place         @relation(fields: [placeId], references: [id])
-  placeId     String
-
-  title       String
-  description String?
-  status      MissionStatus @default(DRAFT)
-
-  rewardAmount     Int           // 1회 리워드 포인트 (원 단위 or 포인트)
-  maxRunsPerUser   Int?          // null 이면 무제한
-  maxTotalRuns     Int?          // 전체 참가 횟수 제한 (null = 무제한)
-  startAt          DateTime?
-  endAt            DateTime?
-  verificationSpec Json          // { gps: true, qr: true, reels: true } 등
-
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-
-  missionRuns MissionRun[]
-}
-
-//
-// MissionRun: 유저의 개별 미션 실행 인스턴스
-//
-
-model MissionRun {
-  id        String          @id @default(cuid())
-  mission   Mission         @relation(fields: [missionId], references: [id])
+model QrNonce {
+  id        String    @id @default(cuid())
+  nonce     String    @unique
   missionId String
+  placeId   String
+  usedAt    DateTime?
+  usedBy    String?
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
-  user      User            @relation(fields: [userId], references: [id])
-  userId    String
-
-  status    MissionRunStatus @default(PENDING_GPS)
-
-  // 단계별 검증 타임스탬프
-  gpsVerifiedAt     DateTime?
-  qrVerifiedAt      DateTime?
-  reelsUploadedAt   DateTime?
-  reviewedAt        DateTime?
-  rejectedAt        DateTime?
-  rejectReason      String?
-
-  // 만료/타임아웃
-  expiresAt         DateTime?
-
-  // 리워드 관련
-  rewardAmount      Int?
-  rewardedAt        DateTime?
-
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-
-  walletTransactions WalletTransaction[]
-
-  @@index([missionId, userId])
-}
-
-//
-// Wallet & Ledger
-//
-
-model Wallet {
-  id            String              @id @default(cuid())
-  user          User                @relation(fields: [userId], references: [id])
-  userId        String              @unique
-
-  balance       Int                 @default(0)  // 사용 가능 잔액
-  lockedBalance Int                 @default(0)  // 출금 대기 등
-  version       Int                 @default(1)  // optimistic locking 용
-
-  createdAt     DateTime            @default(now())
-  updatedAt     DateTime            @updatedAt
-
-  transactions  WalletTransaction[]
-}
-
-model WalletTransaction {
-  id             String          @id @default(cuid())
-  wallet         Wallet          @relation(fields: [walletId], references: [id])
-  walletId       String
-
-  type           WalletTxType
-  status         WalletTxStatus  @default(COMPLETED)
-  amount         Int             // signed: + 적립, - 차감
-  balanceBefore  Int
-  balanceAfter   Int
-
-  // 참조 ID (MissionRun, 정산 배치 등)
-  refType        String?         // "MissionRun", "PayoutBatch" 등
-  refId          String?
-
-  // 멱등성 키: 같은 요청이 중복 실행돼도 1회만 반영되도록
-  idempotencyKey String?         @unique
-
-  // MissionRun과의 관계 (선택)
-  missionRun     MissionRun?     @relation(fields: [missionRunId], references: [id])
-  missionRunId   String?
-
-  createdAt      DateTime        @default(now())
-
-  @@index([walletId, createdAt])
+  @@index([nonce, expiresAt])
+  @@index([expiresAt])
 }

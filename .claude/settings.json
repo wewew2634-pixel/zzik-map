@@ -1,0 +1,104 @@
+{
+  "project": {
+    "name": "ZZIK Map",
+    "version": "0.1.0",
+    "type": "fullstack",
+    "primary_language": "typescript"
+  },
+  "preferences": {
+    "code_style": {
+      "indent": 2,
+      "quotes": "double",
+      "semicolons": true,
+      "trailing_comma": "es5",
+      "arrow_parens": "always"
+    },
+    "testing": {
+      "framework": "node:test",
+      "coverage_threshold": 80,
+      "test_pattern": "tests/**/*.test.ts"
+    },
+    "imports": {
+      "prefer_named": true,
+      "dynamic_imports": ["@/core/auth/rbac", "@/core/errors/app-error"],
+      "path_aliases": {
+        "@": "./apps/web/src",
+        "@/lib": "./apps/web/src/lib",
+        "@/core": "./apps/web/src/core"
+      }
+    },
+    "performance": {
+      "bundle_size_limit": "500kb",
+      "api_response_time_target": "200ms",
+      "lighthouse_score_target": 90
+    }
+  },
+  "workflows": {
+    "pre_commit": [
+      "Run type checking",
+      "Run affected tests",
+      "Check for security vulnerabilities"
+    ],
+    "pre_push": [
+      "Run all tests",
+      "Build project",
+      "Verify migrations"
+    ],
+    "deployment": [
+      "Run production build",
+      "Run E2E tests",
+      "Check bundle size",
+      "Verify environment variables"
+    ],
+    "post_task": [
+      "Verify completion (bash scripts/verify-completion.sh)",
+      "Log performance metrics (.claude/learning/)",
+      "Check for patterns to improve"
+    ],
+    "weekly_maintenance": [
+      "Run self-diagnosis (zzik-self-heal)",
+      "Analyze failure patterns",
+      "Apply safe improvements automatically",
+      "Generate weekly growth report"
+    ]
+  },
+  "self_healing": {
+    "enabled": true,
+    "auto_fix_safe_issues": true,
+    "auto_learn_from_failures": true,
+    "min_pattern_occurrences": 3,
+    "learning_retention_days": 90,
+    "weekly_diagnosis": "Monday 00:00",
+    "log_directory": ".claude/learning/"
+  },
+  "anti_patterns": [
+    "Direct prisma import in tests (use testPrisma from setup.ts)",
+    "Auth logic outside handleApi wrapper",
+    "Hardcoded secrets or credentials",
+    "Using any type without justification",
+    "Skipping authentication checks",
+    "Creating unnecessary abstractions",
+    "Using console.log in production code",
+    "Synchronous operations in async contexts"
+  ],
+  "security": {
+    "always_validate_input": true,
+    "never_skip_auth": true,
+    "use_parameterized_queries": true,
+    "sanitize_user_input": true,
+    "rate_limiting_required": ["admin", "mutations"],
+    "required_headers": ["Content-Type", "Authorization (for protected routes)"]
+  },
+  "monitoring": {
+    "error_tracking": "structured AppError with traceId",
+    "performance_monitoring": "Core Web Vitals",
+    "cache_monitoring": "Redis hit rate > 70%",
+    "db_monitoring": "Query performance < 100ms avg"
+  },
+  "documentation": {
+    "inline_comments": "Only for non-obvious logic",
+    "jsdoc": "For public APIs and complex functions",
+    "readme_sections": ["Setup", "Architecture", "Testing", "Deployment"],
+    "changelog": "Keep updated for major changes"
+  }
+}

@@ -1,231 +1,186 @@
 'use client'
 
 import { useState, useMemo, useEffect } from 'react'
-import { MapShell, MapOverlay, PlaceCard } from '@zzik/ui'
+import { MapShell, PlaceCard, PlaceCardSkeleton, MissionDetailSheet } from '@zzik/ui'
 import { MapboxCanvas } from '@/components/zzik-map/MapboxCanvas'
-import type { PlaceSummary } from '@/types/place'
+import { SearchBar } from '@/components/linear/SearchBar'
 import { trackMapEvent, MapEventTypes } from '@/lib/analytics/map-events'
 import { usePlaces } from '@/hooks/usePlaces'
+import { deriveLoyaltyScore, computeBenefitScore } from '@/lib/place-scoring'
 
-const DEFAULT_CENTER: [number, number] = [127.0565, 37.5446] // 강남 기본 좌표
-
-type FilterType = 'all' | 'gold' | 'active'
-
-/**
- * 필터 로직 (임시 규칙)
- * - 'all': 모든 장소
- * - 'gold': isGold === true
- * - 'active': 임시 규칙으로 successRate >= 80 또는 missions >= 10
- *   (추후 백엔드/비즈니스 로직에 맞춰 교체)
- */
-function applyFilter(places: PlaceSummary[], filter: FilterType): PlaceSummary[] {
-  switch (filter) {
-    case 'all':
-      return places
-    case 'gold':
-      return places.filter((p) => p.isGold)
-    case 'active':
-      // 임시 active 규칙: 성공률 80% 이상 또는 미션 10회 이상
-      return places.filter((p) => {
-        const metrics = p.metrics
-        if (!metrics) return false
-        return metrics.successRate >= 80 || metrics.missions >= 10
-      })
-    default:
-      return places
-  }
-}
+const DEFAULT_CENTER: [number, number] = [127.0565, 37.5446]
 
 export default function MapPage() {
   const { places, loading, error } = usePlaces()
   const [center, setCenter] = useState<[number, number]>(DEFAULT_CENTER)
-  const [filter, setFilter] = useState<FilterType>('all')
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null)
+  const [sheetOpen, setSheetOpen] = useState(false)
 
-  // Initialize selectedPlaceId when places are loaded
+  // Geolocation
   useEffect(() => {
-    if (places.length > 0 && !selectedPlaceId) {
-      setSelectedPlaceId(places[0].id)
-    }
-  }, [places, selectedPlaceId])
-
-  // (B) Geolocation: 현재 위치 가져오기
-  useEffect(() => {
-    if (!navigator.geolocation) {
-      console.warn('Geolocation not supported')
-      return
-    }
+    if (!navigator.geolocation) return
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords
         setCenter([longitude, latitude])
-
-        trackMapEvent(MapEventTypes.GEOLOCATION_SUCCESS, {
-          lat: latitude,
-          lng: longitude,
-        })
+        trackMapEvent(MapEventTypes.GEOLOCATION_SUCCESS, { lat: latitude, lng: longitude })
       },
       (error) => {
         console.warn('Geolocation error:', error.message)
-        trackMapEvent(MapEventTypes.GEOLOCATION_ERROR, {
-          code: error.code,
-          message: error.message,
-        })
-        // 실패 시 DEFAULT_CENTER 유지 (이미 초기값이므로 별도 처리 불필요)
+        trackMapEvent(MapEventTypes.GEOLOCATION_ERROR, { code: error.code, message: error.message })
       },
-      {
-        timeout: 10000,
-        maximumAge: 60000,
-      }
+      { timeout: 10000, maximumAge: 60000 }
     )
   }, [])
 
-  // 첫 진입 이벤트
+  // Track map viewed
   useEffect(() => {
     trackMapEvent(MapEventTypes.MAP_VIEWED)
   }, [])
 
-  // (C) 필터링된 장소 목록
-  const filteredPlaces = useMemo(
-    () => applyFilter(places, filter),
-    [places, filter]
-  )
+  // Compute scores
+  const placesWithScores = useMemo(() => {
+    return places.map((place) => ({
+      ...place,
+      loyaltyScore: deriveLoyaltyScore(place),
+      benefitScore: computeBenefitScore(place),
+    }))
+  }, [places])
 
-  // 필터 변경 시 selectedPlaceId 조정
-  useEffect(() => {
-    if (filteredPlaces.length === 0) {
-      setSelectedPlaceId(null)
-      return
+  // Auto-select first place
+  const selectedPlace = useMemo(() => {
+    if (placesWithScores.length === 0) return null
+
+    const currentSelection = placesWithScores.find((p) => p.id === selectedPlaceId)
+    if (currentSelection) return currentSelection
+
+    const firstPlace = placesWithScores[0]
+    if (selectedPlaceId !== firstPlace.id) {
+      queueMicrotask(() => setSelectedPlaceId(firstPlace.id))
     }
-
-    // 현재 선택된 place가 filteredPlaces에 없으면 첫 번째로 변경
-    const isSelectedInFiltered = filteredPlaces.some((p) => p.id === selectedPlaceId)
-    if (!isSelectedInFiltered) {
-      setSelectedPlaceId(filteredPlaces[0].id)
-    }
-  }, [filteredPlaces, selectedPlaceId])
-
-  const selectedPlace = useMemo(
-    () => filteredPlaces.find((p) => p.id === selectedPlaceId) ?? filteredPlaces[0],
-    [filteredPlaces, selectedPlaceId]
-  )
-
-  const handleFilterChange = (newFilter: FilterType) => {
-    setFilter(newFilter)
-    trackMapEvent(MapEventTypes.FILTER_CHANGED, { filter: newFilter })
-  }
+    return firstPlace
+  }, [placesWithScores, selectedPlaceId])
 
   const handlePlaceClick = (placeId: string) => {
     setSelectedPlaceId(placeId)
+    setSheetOpen(true)
     trackMapEvent(MapEventTypes.CARD_CLICKED, { placeId })
   }
 
-  // Show loading state
+  const handleCloseSheet = () => {
+    setSheetOpen(false)
+  }
+
+  // MissionDetailSheet 데이터 (선택된 장소 기준) - Hook을 early return 전에 호출
+  const missionData = useMemo(() => {
+    if (!selectedPlace) return null
+
+    return {
+      missionTitle: '방문 인증 미션',
+      placeName: selectedPlace.name,
+      placeCategory: selectedPlace.category,
+      placeArea: '성수동', // TODO: Extract from place data
+      rewardAmount: 5000, // TODO: Get from actual mission data
+      isGold: selectedPlace.isGold,
+      missionConditions: 'GPS + QR + 영수증',
+      currentStep: 'gps' as const,
+    }
+  }, [selectedPlace])
+
+  // Loading state
   if (loading) {
     return (
-      <MapShell
-        map={<div className="flex items-center justify-center h-full bg-zinc-900 text-white">로딩 중...</div>}
-        overlay={
-          <MapOverlay>
-            <div className="flex items-center justify-center py-8 text-sm text-zinc-400">
-              데이터를 불러오는 중...
+      <div className="h-screen bg-surface">
+        <MapShell
+          map={<div className="flex items-center justify-center h-full bg-surface-secondary text-text-primary" role="status" aria-live="polite">로딩 중...</div>}
+          searchBar={
+            <SearchBar
+              placeholder="성수동에서 이득인 곳 찾기..."
+            />
+          }
+          bottomPanel={
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-text-primary">내 주변 미션</span>
+              </div>
+              <div className="flex flex-col gap-2 max-h-64 overflow-y-auto">
+                {[1, 2, 3, 4].map((i) => (
+                  <PlaceCardSkeleton key={i} />
+                ))}
+              </div>
             </div>
-          </MapOverlay>
-        }
-      />
+          }
+        />
+      </div>
     )
   }
 
-  // Show error state
+  // Error state
   if (error) {
     return (
-      <MapShell
-        map={<div className="flex items-center justify-center h-full bg-zinc-900 text-white">지도 로딩 실패</div>}
-        overlay={
-          <MapOverlay>
-            <div className="flex flex-col items-center justify-center py-8 text-sm text-zinc-400">
-              <p className="text-red-500">오류가 발생했습니다</p>
-              <p className="mt-2">{error}</p>
+      <div className="h-screen bg-surface">
+        <MapShell
+          map={<div className="flex items-center justify-center h-full bg-surface-secondary text-text-primary" role="alert">지도 로딩 실패</div>}
+          bottomPanel={
+            <div className="flex flex-col items-center justify-center py-8 text-sm text-text-secondary" role="alert" aria-live="assertive">
+              <p className="text-accent-red">오류가 발생했습니다</p>
+              <p className="mt-2" id="error-message">{error}</p>
             </div>
-          </MapOverlay>
-        }
-      />
+          }
+        />
+      </div>
     )
   }
 
   return (
-    <MapShell
-      map={
-        <MapboxCanvas
-          center={center}
-          zoom={14}
-          places={filteredPlaces}
-          onPlaceClick={setSelectedPlaceId}
-          selectedPlaceId={selectedPlaceId}
-        />
-      }
-      overlay={
-        <MapOverlay>
-          <div className="space-y-3 py-2">
-            {/* (C) 필터 UI - 독립 버튼 그룹 (2026 모노톤 디자인) */}
-            <div className="flex gap-2 pb-3 border-b border-zinc-800">
-              <button
-                onClick={() => handleFilterChange('all')}
-                className={`flex-1 rounded-full px-3 py-2 text-xs font-medium transition-colors ${
-                  filter === 'all'
-                    ? 'bg-zinc-50 text-zinc-900'
-                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-                }`}
-              >
-                전체
-              </button>
-              <button
-                onClick={() => handleFilterChange('gold')}
-                className={`flex-1 rounded-full px-3 py-2 text-xs font-medium transition-colors ${
-                  filter === 'gold'
-                    ? 'bg-zinc-50 text-zinc-900'
-                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-                }`}
-              >
-                GOLD
-              </button>
-              <button
-                onClick={() => handleFilterChange('active')}
-                className={`flex-1 rounded-full px-3 py-2 text-xs font-medium transition-colors ${
-                  filter === 'active'
-                    ? 'bg-zinc-50 text-zinc-900'
-                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-                }`}
-              >
-                활성
-              </button>
+    <>
+      <div className="h-screen bg-surface">
+        <MapShell
+        map={
+          <MapboxCanvas
+            center={center}
+            zoom={14}
+            places={placesWithScores}
+            onPlaceClick={setSelectedPlaceId}
+            selectedPlaceId={selectedPlaceId}
+          />
+        }
+        searchBar={
+          <SearchBar
+            placeholder="성수동에서 이득인 곳 찾기..."
+            onFilterClick={() => {
+              // TODO: Open filter modal
+              console.log('Filter clicked')
+            }}
+          />
+        }
+        bottomPanel={
+          <div className="space-y-3">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-medium text-text-primary">
+                내 주변 미션
+              </span>
+              <span className="text-[11px] text-text-tertiary">
+                {placesWithScores.length}개
+              </span>
             </div>
 
-            {/* 헤더 */}
-            <div className="mb-4">
-              <h2 className="text-base font-semibold text-white">주변 미션</h2>
-              <p className="mt-1 text-xs text-zinc-400">
-                {filteredPlaces.length > 0 ? (
-                  <>
-                    총 {filteredPlaces.length}개
-                    {selectedPlace && <span> · 선택: {selectedPlace.name}</span>}
-                  </>
-                ) : (
-                  '조건에 맞는 미션이 없습니다'
-                )}
-              </p>
-            </div>
-
-            {/* 장소 리스트 */}
-            {filteredPlaces.length > 0 ? (
-              <div className="space-y-2">
-                {filteredPlaces.map((place) => (
+            {/* Place list */}
+            {placesWithScores.length > 0 ? (
+              <div
+                data-testid="place-list"
+                className="flex flex-col gap-2 max-h-64 overflow-y-auto"
+                role="list"
+                aria-label="주변 장소 목록"
+              >
+                {placesWithScores.map((place) => (
                   <div
                     key={place.id}
                     className={
                       place.id === selectedPlaceId
-                        ? 'ring-1 ring-zinc-600 rounded-xl'
+                        ? 'ring-2 ring-accent-blue rounded-lg'
                         : ''
                     }
                   >
@@ -240,19 +195,54 @@ export default function MapPage() {
                       benefitLabel={place.benefitLabel}
                       benefitValue={place.benefitValue}
                       metrics={place.metrics}
+                      loyaltyScore={place.loyaltyScore}
+                      benefitScore={place.benefitScore}
                       onClick={() => handlePlaceClick(place.id)}
                     />
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="flex items-center justify-center py-8 text-sm text-zinc-400">
-                필터 조건을 변경해보세요
+              <div data-testid="empty-state" className="flex items-center justify-center py-8 text-sm text-text-secondary">
+                조건에 맞는 가게가 없습니다
               </div>
             )}
           </div>
-        </MapOverlay>
-      }
-    />
+        }
+      />
+      </div>
+
+      {/* MissionDetailSheet */}
+      {missionData && (
+        <MissionDetailSheet
+          open={sheetOpen}
+          onClose={handleCloseSheet}
+          missionTitle={missionData.missionTitle}
+          placeName={missionData.placeName}
+          placeCategory={missionData.placeCategory}
+          placeArea={missionData.placeArea}
+          rewardAmount={missionData.rewardAmount}
+          isGold={missionData.isGold}
+          missionConditions={missionData.missionConditions}
+          currentStep={missionData.currentStep}
+          onStart={() => {
+            // TODO: Start mission
+            console.log('Start mission for place:', selectedPlaceId)
+          }}
+          onVerifyGps={() => {
+            // TODO: Verify GPS
+            console.log('Verify GPS for place:', selectedPlaceId)
+          }}
+          onVerifyQr={() => {
+            // TODO: Verify QR
+            console.log('Verify QR for place:', selectedPlaceId)
+          }}
+          onVerifyReels={() => {
+            // TODO: Verify Reels
+            console.log('Verify Reels for place:', selectedPlaceId)
+          }}
+        />
+      )}
+    </>
   )
 }

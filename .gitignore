@@ -8,6 +8,8 @@ node_modules/
 
 # testing
 /coverage
+.nyc_output/
+*.lcov
 
 # next.js
 /.next/
@@ -26,6 +28,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+.env
 .env*.local
 .env.local
 .env.development.local
@@ -43,13 +46,80 @@ next-env.d.ts
 test-results/
 playwright-report/
 playwright/.cache/
+blob-report/
 
 # UX testing artifacts
 artifacts/screenshots/*.png
 artifacts/screenshots/*.jpg
 !artifacts/screenshots/.gitkeep
+artifacts/ux/*.png
+artifacts/ux/*.jpg
+!artifacts/ux/.gitkeep
+artifacts/
 
-# Playwright reports
-blob-report/
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+.codex-auto/logs/
 
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Prisma
 /generated/prisma
+
+# Chrome extension (if not needed in repo)
+# chrome-extension/
+
+# ============================================
+# Claude Code Private Data
+# ============================================
+# Learning data (개인 작업 패턴, 성과 로그)
+.claude/learning/
+
+# Local settings (권한, 로컬 경로)
+.claude/settings.local.json
+
+# Catalyst UI Kit (전체 불필요 - 삭제됨)
+.claude/catalyst-ui-kit/
+
+# Test/Debug scripts (개발 중 생성되는 임시 스크립트)
+apps/web/screenshot-*.mjs
+apps/web/test-*.mjs
+apps/web/verify-*.mjs
+apps/web/check-*.mjs
+apps/web/debug-*.mjs
+apps/web/deep-*.mjs
+apps/web/security-audit.mjs
+
+# ============================================
+# ZZIK Map Sensitive Data
+# ============================================
+# 개인 문서 (사업계획서, 투자자료)
+/home/ubuntu/ZZIK_*.md
+/home/ubuntu/*.md
+*.private.md
+
+# 임시 보고서
+*_보고서.md
+*_완료.md
+*_Report.md
+*_Verification*.md
+
+# 테스트 데이터
+test-data/
+*.test.json
+
+# 백업 파일
+*.backup
+*.bak
+*.old

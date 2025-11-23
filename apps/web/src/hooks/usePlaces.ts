@@ -63,12 +63,20 @@ export function usePlaces() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
     async function fetchPlaces() {
       try {
         setLoading(true);
         setError(null);
 
-        const res = await fetch("/api/places");
+        const res = await fetch("/api/places", {
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
         const data: ApiResponse<{ places: PlaceFromApi[] }> = await res.json();
 
         if (!data.ok) {
@@ -78,14 +86,26 @@ export function usePlaces() {
         const transformed = data.data.places.map(transformPlace);
         setPlaces(transformed);
       } catch (err) {
+        clearTimeout(timeoutId);
         console.error("Failed to fetch places:", err);
-        setError(err instanceof Error ? err.message : "Failed to fetch places");
+
+        // Distinguish between timeout and other errors
+        if (err instanceof Error && err.name === "AbortError") {
+          setError("요청 시간 초과 (10초)");
+        } else {
+          setError(err instanceof Error ? err.message : "Failed to fetch places");
+        }
       } finally {
         setLoading(false);
       }
     }
 
     fetchPlaces();
+
+    return () => {
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
   }, []);
 
   return { places, loading, error };

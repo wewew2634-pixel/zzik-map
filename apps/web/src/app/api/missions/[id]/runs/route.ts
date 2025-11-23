@@ -2,29 +2,56 @@
 
 import { handleApi } from "@/app/api/_utils/handleApi";
 import { startMissionRun } from "@/core/missions/service";
-import { validationError } from "@/core/errors/app-error";
+import { getUserIdFromRequestLoose } from "@/core/auth/jwt";
+import {
+  StartMissionRunBodySchema,
+  StartMissionRunParamsSchema,
+} from "@/core/missions/validation";
+import { checkRateLimit, addRateLimitHeaders } from "@/middleware/ratelimit";
+import { missionRunRateLimiter } from "@/lib/ratelimit";
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
+  // Authenticate user first
+  const userId = getUserIdFromRequestLoose(req);
+
+  // Check rate limit (10 runs per 5 min per user)
+  const rateLimitResult = await checkRateLimit(
+    `mission-start:${userId}`,
+    missionRunRateLimiter,
+  );
+
+  // Create headers with rate limit info
+  const headers = new Headers();
+  addRateLimitHeaders(headers, rateLimitResult);
+
   return handleApi(async () => {
-    const missionId = params.id;
+    const rawParams = await params;
+    const parsedParams = StartMissionRunParamsSchema.parse({
+      missionId: rawParams.id,
+    });
+    StartMissionRunBodySchema.parse(
+      await req
+        .json()
+        .catch(() => ({})),
+    );
 
-    // TODO: Get userId from authentication
-    // For now, use a placeholder
-    const userId = "temp-user-id";
-
-    if (!userId) {
-      throw validationError("User ID is required");
-    }
-
-    const run = await startMissionRun({ userId, missionId });
+    const run = await startMissionRun({
+      userId,
+      missionId: parsedParams.missionId,
+    });
 
     return {
-      missionRunId: run.id,
+      id: run.id,
+      missionId: run.missionId,
       status: run.status,
-      expiresAt: run.expiresAt,
+      expiresAt: run.expiresAt?.toISOString() ?? null,
+      activeLockKey: run.activeLockKey ?? null,
+      createdAt: run.createdAt.toISOString(),
+      updatedAt: run.updatedAt.toISOString(),
     };
-  });
+  }, { headers });
 }
+

@@ -1,44 +1,91 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SCENARIO="${1:-MAP_BASIC_FLOW}"
+MODE="${1:-help}"
 
+# Colors
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+echo -e "${BLUE}🎭 ZZIK LIVE v4 - Playwright UX Tests${NC}"
+echo "========================================"
+echo ""
+
+# Check if dev server is running
 echo "🔎 Checking dev server at http://localhost:3000 ..."
 
 if ! curl -fsS "http://localhost:3000" >/dev/null 2>&1; then
-  echo "⚠️  Dev server not running. Starting 'pnpm --filter web dev' ..."
-  pnpm --filter web dev >/dev/null 2>&1 &
-  DEV_PID=$!
-  echo "➡️  Started dev server (PID=${DEV_PID}). Waiting for readiness..."
-
-  # 대충 60초까지 대기
-  for i in $(seq 1 30); do
-    if curl -fsS "http://localhost:3000" >/dev/null 2>&1; then
-      echo "✅ Dev server is up."
-      break
-    fi
-    sleep 2
-    echo -n "."
-  done
+  echo -e "${YELLOW}⚠️  Dev server not running.${NC}"
+  echo "Please run: pnpm dev"
+  echo ""
+  exit 1
 else
-  echo "✅ Dev server already running."
+  echo -e "${GREEN}✅ Dev server is running.${NC}"
 fi
 
-echo
-echo "📄 Available scenarios (from docs/ux/SCENARIOS_ENHANCED.md):"
-if [ -f "docs/ux/SCENARIOS_ENHANCED.md" ]; then
-  # '## '로 시작하는 시나리오 헤더만 출력
-  grep '^## ' docs/ux/SCENARIOS_ENHANCED.md || true
-else
-  echo "  (docs/ux/SCENARIOS_ENHANCED.md 파일이 아직 없습니다)"
-fi
+echo ""
 
-echo
-echo "🚀 To run Claude Code with this UX tester agent, execute:"
-echo "  claude --add-dir . \\"
-echo "    --mcp-config playwright-mcp.config.json \\"
-echo "    --agents \"\$(cat ux-agents.json)\""
+# Run tests based on mode
+case "$MODE" in
+    "map")
+        echo -e "${BLUE}Running Map Exploration Tests (A1-A4)...${NC}"
+        npx playwright test tests/ux/map-exploration.spec.ts
+        ;;
+    "mission")
+        echo -e "${BLUE}Running Mission Flow Tests (B1-B4)...${NC}"
+        npx playwright test tests/ux/mission-flow.spec.ts
+        ;;
+    "basic")
+        echo -e "${BLUE}Running Basic Tests...${NC}"
+        npx playwright test tests/ux/map-basic.spec.ts
+        ;;
+    "all")
+        echo -e "${BLUE}Running All UX Tests...${NC}"
+        npx playwright test tests/ux/
+        ;;
+    "ui")
+        echo -e "${BLUE}Running Tests in UI Mode...${NC}"
+        npx playwright test --ui
+        ;;
+    "debug")
+        echo -e "${BLUE}Running Tests in Debug Mode...${NC}"
+        npx playwright test --debug "$2"
+        ;;
+    "report")
+        echo -e "${BLUE}Opening Test Report...${NC}"
+        npx playwright show-report
+        ;;
+    *)
+        echo "Usage: ./scripts/run-ux-test.sh [option]"
+        echo ""
+        echo "Options:"
+        echo "  map       - Run Map Exploration tests (섹션 A: A1-A4)"
+        echo "  mission   - Run Mission Flow tests (섹션 B: B1-B4)"
+        echo "  basic     - Run Basic tests (existing)"
+        echo "  all       - Run all UX tests"
+        echo "  ui        - Run tests in UI mode"
+        echo "  debug     - Run tests in debug mode"
+        echo "  report    - Open test report"
+        echo ""
+        echo "Examples:"
+        echo "  ./scripts/run-ux-test.sh map"
+        echo "  ./scripts/run-ux-test.sh mission"
+        echo "  ./scripts/run-ux-test.sh all"
+        echo "  ./scripts/run-ux-test.sh ui"
+        echo ""
+        echo -e "${BLUE}📄 Scenario Reference:${NC}"
+        echo "  docs/ux/PLAYWRIGHT_SCENARIOS_ZZIK.md"
+        echo ""
+        exit 0
+        ;;
+esac
 
-echo
-echo "Then ask Claude:"
-echo "\"ux-tester 에이전트로 ${SCENARIO} 시나리오를 실행하고 결과를 리포트해.\""
+echo ""
+echo -e "${GREEN}✅ Tests completed!${NC}"
+echo ""
+echo "To view detailed report, run:"
+echo "  ./scripts/run-ux-test.sh report"
+echo ""
