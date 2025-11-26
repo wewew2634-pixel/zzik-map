@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --zzik-coral: #FF5A5F;
+  --deep-space: #0A1628;
+  --electric-cyan: #00D9FF;
+}
+
+body {
+  background-color: var(--deep-space);
+  color: white;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--deep-space);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--zzik-coral);
+  border-radius: 4px;
+}
+
+/* Selection */
+::selection {
+  background: var(--zzik-coral);
+  color: white;
+}
