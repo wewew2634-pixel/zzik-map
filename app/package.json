@@ -34,7 +34,10 @@
     "clean:deps": "rm -rf node_modules pnpm-lock.yaml && pnpm install",
     "rebuild": "pnpm clean && pnpm build",
     "self-heal": "bash .claude/scripts/error-diagnostics-loop.sh && pnpm build",
-    "dev:diagnose": "pnpm diagnose && pnpm dev"
+    "dev:diagnose": "pnpm diagnose && pnpm dev",
+    "browser:automation": "tsx ../scripts/browser-automation.ts",
+    "browser:screenshot": "pnpm browser:automation",
+    "browser:test": "pnpm test:e2e"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

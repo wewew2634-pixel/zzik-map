@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "puppeteer": {
+      "command": "node",
+      "args": [
+        "-e",
+        "const { PuppeteerMCPServer } = require('@anthropic/mcp-server-puppeteer'); new PuppeteerMCPServer().start();"
+      ],
+      "env": {
+        "NODE_OPTIONS": "--max-old-space-size=2048"
+      }
+    },
+    "filesystem": {
+      "command": "node",
+      "args": [
+        "-e",
+        "const { FilesystemMCPServer } = require('@anthropic/mcp-server-filesystem'); new FilesystemMCPServer(['/home/ubuntu/zzik-map']).start();"
+      ]
+    },
+    "bash": {
+      "command": "bash",
+      "args": [
+        "-c",
+        "exec bash"
+      ]
+    }
+  }
+}
