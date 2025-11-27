@@ -4,10 +4,14 @@
  * Central export for all custom React hooks.
  */
 
-// Accessibility
+// Accessibility & Motion
 export { useReducedMotion } from './useReducedMotion';
 export { useDarkMode } from './useDarkMode';
 export type { Theme, ResolvedTheme, UseDarkModeReturn } from './useDarkMode';
+
+// Feedback System (Phase 6)
+export { useFeedback } from './useFeedback';
+export type { UseFeedbackReturn } from './useFeedback';
 
 // Theme
 export { useTheme } from './useTheme';
