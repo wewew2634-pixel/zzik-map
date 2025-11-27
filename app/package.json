@@ -39,7 +39,10 @@
     "browser:screenshot": "pnpm browser:automation",
     "browser:test": "pnpm test:e2e",
     "uxui:analyze": "bash ../.claude/scripts/uxui-mcp-analyzer.sh",
-    "uxui:full-analysis": "pnpm type-check && pnpm lint && pnpm uxui:analyze && pnpm test"
+    "uxui:full-analysis": "pnpm type-check && pnpm lint && pnpm uxui:analyze && pnpm test",
+    "uxui:monitor": "bash ../.claude/scripts/continuous-uxui-monitor.sh",
+    "uxui:monitor:quick": "bash ../.claude/scripts/continuous-uxui-monitor.sh --interval 15 --max-iterations 10",
+    "uxui:monitor:auto": "bash ../.claude/scripts/continuous-uxui-monitor.sh --interval 30"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
