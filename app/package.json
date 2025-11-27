@@ -27,7 +27,14 @@
     "poc:gemini": "tsx scripts/poc/gemini-vision.ts",
     "poc:pgvector": "tsx scripts/poc/pgvector-similarity.ts",
     "poc:supabase": "tsx scripts/poc/supabase-integration.ts",
-    "poc:all": "pnpm poc:gps && pnpm poc:gemini && pnpm poc:pgvector && pnpm poc:supabase"
+    "poc:all": "pnpm poc:gps && pnpm poc:gemini && pnpm poc:pgvector && pnpm poc:supabase",
+    "diagnose": "bash .claude/scripts/error-diagnostics-loop.sh",
+    "clean": "rm -rf .next .turbo dist build coverage",
+    "clean:all": "rm -rf .next .turbo dist build node_modules coverage pnpm-lock.yaml",
+    "clean:deps": "rm -rf node_modules pnpm-lock.yaml && pnpm install",
+    "rebuild": "pnpm clean && pnpm build",
+    "self-heal": "bash .claude/scripts/error-diagnostics-loop.sh && pnpm build",
+    "dev:diagnose": "pnpm diagnose && pnpm dev"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
