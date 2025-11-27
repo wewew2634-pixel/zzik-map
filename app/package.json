@@ -37,7 +37,9 @@
     "dev:diagnose": "pnpm diagnose && pnpm dev",
     "browser:automation": "tsx ../scripts/browser-automation.ts",
     "browser:screenshot": "pnpm browser:automation",
-    "browser:test": "pnpm test:e2e"
+    "browser:test": "pnpm test:e2e",
+    "uxui:analyze": "bash ../.claude/scripts/uxui-mcp-analyzer.sh",
+    "uxui:full-analysis": "pnpm type-check && pnpm lint && pnpm uxui:analyze && pnpm test"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

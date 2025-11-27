@@ -1,0 +1,162 @@
+{
+  "name": "ZZIK MAP UX/UI Analysis",
+  "version": "7.0",
+  "description": "ZZIK MAP V7 - UX/UI Mastery Framework with Full MCP Activation",
+
+  "mcpServers": {
+    "browser": {
+      "command": "npx",
+      "args": ["@anthropic/mcp-server-browser"],
+      "enabled": true,
+      "priority": "high"
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["@anthropic/mcp-server-filesystem"],
+      "enabled": true,
+      "priority": "high"
+    },
+    "bash": {
+      "command": "bash",
+      "args": [],
+      "enabled": true,
+      "priority": "high"
+    },
+    "git": {
+      "command": "git",
+      "args": [],
+      "enabled": true,
+      "priority": "medium"
+    }
+  },
+
+  "uxuiAnalysis": {
+    "enabled": true,
+    "mcpActivation": "full",
+    "autoMode": true,
+    "features": {
+      "browserAutomation": true,
+      "fileSystemAccess": true,
+      "shellExecution": true,
+      "gitIntegration": true,
+      "performanceMonitoring": true,
+      "accessibilityAudit": true,
+      "visualTesting": true,
+      "componentAnalysis": true,
+      "typeScriptAnalysis": true,
+      "styleValidation": true
+    }
+  },
+
+  "analysisTools": {
+    "visualization": {
+      "playwright": true,
+      "screenshots": true,
+      "componentTree": true,
+      "styleInspection": true
+    },
+    "validation": {
+      "wcagAudit": true,
+      "performanceCheck": true,
+      "typeCheck": true,
+      "linting": true,
+      "buildValidation": true
+    },
+    "monitoring": {
+      "coreWebVitals": true,
+      "componentPerformance": true,
+      "memoryUsage": true,
+      "renderTime": true,
+      "bundleSize": true
+    }
+  },
+
+  "agents": {
+    "uxuiMastery": {
+      "enabled": true,
+      "capabilities": [
+        "visual-analysis",
+        "interaction-design",
+        "motion-economics",
+        "accessibility-audit",
+        "performance-optimization",
+        "behavioral-psychology",
+        "cognitive-principles"
+      ]
+    },
+    "componentAnalysis": {
+      "enabled": true,
+      "capabilities": [
+        "component-inspection",
+        "type-checking",
+        "style-validation",
+        "accessibility-checking",
+        "performance-profiling"
+      ]
+    },
+    "performanceMonitoring": {
+      "enabled": true,
+      "capabilities": [
+        "core-web-vitals",
+        "bundle-analysis",
+        "render-performance",
+        "memory-tracking",
+        "network-analysis"
+      ]
+    }
+  },
+
+  "autoAnalysis": {
+    "onFileChange": {
+      "enabled": true,
+      "triggers": [
+        "*.tsx",
+        "*.ts",
+        "*.css",
+        "*.json"
+      ],
+      "runTests": true,
+      "generateReport": true,
+      "validateTypes": true,
+      "auditAccessibility": true
+    },
+    "beforeCommit": {
+      "enabled": true,
+      "checks": [
+        "type-check",
+        "lint",
+        "test",
+        "a11y-audit",
+        "performance-check"
+      ]
+    },
+    "beforeBuild": {
+      "enabled": true,
+      "checks": [
+        "type-check",
+        "lint",
+        "test",
+        "build-validation",
+        "performance-baseline"
+      ]
+    }
+  },
+
+  "reporting": {
+    "enabled": true,
+    "formats": [
+      "json",
+      "markdown",
+      "html"
+    ],
+    "include": [
+      "uxui-metrics",
+      "accessibility-report",
+      "performance-metrics",
+      "type-coverage",
+      "component-analysis",
+      "style-validation",
+      "recommendations"
+    ]
+  }
+}
