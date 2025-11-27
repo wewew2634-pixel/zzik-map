@@ -1,0 +1,256 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   ZZIK Design System V3 - Typography Tokens
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   CRITICAL NANO-LEVEL FIXES:
+   - CRITICAL FIX #1: Added @supports for variable font browser compatibility
+   - CRITICAL FIX #2: Added fallback woff2 format for older browsers
+   - CRITICAL FIX #3: Language-specific font optimization
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* Pretendard Variable - Primary font with browser support detection */
+@supports (font-variation-settings: "wght" 400) {
+  @font-face {
+    font-family: 'Pretendard Variable';
+    src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendard-variable.woff2') format('woff2-variations'),
+         url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendard-variable.woff2') format('woff2');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0100-017F, U+0180-024F, U+0250-02AF, U+1E00-1EFF, U+AC00-D7AF;
+  }
+}
+
+/* Fallback for browsers without variable font support */
+@supports not (font-variation-settings: "wght" 400) {
+  @font-face {
+    font-family: 'Pretendard Variable';
+    src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendard-variable.woff2') format('woff2');
+    font-weight: 400 600;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0100-017F, U+0180-024F, U+0250-02AF, U+1E00-1EFF, U+AC00-D7AF;
+  }
+}
+
+/* Noto Sans JP - Japanese support */
+@font-face {
+  font-family: 'Noto Sans JP';
+  src: url('https://fonts.gstatic.com/s/notosansjp/v52/-F6ofjtqLzI2JPCgQBnw7zBgdxb6Xw.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0100-017F, U+0180-024F, U+0250-02AF, U+1E00-1EFF, U+3040-309F, U+30A0-30FF, U+4E00-9FFF;
+}
+
+/* Noto Sans SC - Simplified Chinese support */
+@font-face {
+  font-family: 'Noto Sans SC';
+  src: url('https://fonts.gstatic.com/s/notosanssc/v37/PrZc-fdhzDxn5ESr1WQKAY2l0wdM_eCo8XKDH_P3aEw.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0100-017F, U+0180-024F, U+0250-02AF, U+1E00-1EFF, U+2000-206F, U+3000-303F, U+4E00-9FFF;
+}
+
+/* Noto Sans TC - Traditional Chinese support */
+@font-face {
+  font-family: 'Noto Sans TC';
+  src: url('https://fonts.gstatic.com/s/notosanstc/v37/PrZf-fdhzDxn5ESr1WQKAY2l0wdM_dCaO23KHDS3aEw.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0100-017F, U+0180-024F, U+0250-02AF, U+1E00-1EFF, U+2000-206F, U+3000-303F, U+4E00-9FFF;
+}
+
+/* Noto Sans Thai - Thai support */
+@font-face {
+  font-family: 'Noto Sans Thai';
+  src: url('https://fonts.gstatic.com/s/notosansthai/v28/PlIpFj_0v-P1MnLhf-p4M5BIGMhGTrjCMa8ow0lDDww.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0100-017F, U+0180-024F, U+0E00-0E7F;
+}
+
+/* REMOVED: Duplicate 'Pretendard Variable SB' declaration - variable fonts support all weights natively */
+
+@theme {
+  /* ──────────────────────────────────────────────────────────────────────────
+     Font Families
+     ────────────────────────────────────────────────────────────────────────── */
+
+  /* P0-5: Single consolidated font stack (source of truth) */
+  --font-sans: 'Pretendard Variable', system-ui, -apple-system, BlinkMacSystemFont,
+               'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco,
+               'Inconsolata', ui-monospace, monospace;
+  --font-feature-settings: 'cv11', 'ss01';
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Font Sizes (Fluid Scale)
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --text-xs:   clamp(0.6875rem, 0.65rem + 0.1vw, 0.75rem);
+  --text-sm:   clamp(0.8125rem, 0.78rem + 0.1vw, 0.875rem);
+  --text-base: clamp(0.9375rem, 0.9rem + 0.1vw, 1rem);
+  --text-lg:   clamp(1.0625rem, 1rem + 0.15vw, 1.125rem);
+  --text-xl:   clamp(1.1875rem, 1.1rem + 0.2vw, 1.25rem);
+  --text-2xl:  clamp(1.375rem, 1.25rem + 0.3vw, 1.5rem);
+  --text-3xl:  clamp(1.6875rem, 1.5rem + 0.4vw, 1.875rem);
+  --text-4xl:  clamp(2rem, 1.75rem + 0.6vw, 2.25rem);
+  --text-5xl:  clamp(2.5rem, 2rem + 1vw, 3rem);
+  --text-6xl:  clamp(3rem, 2.5rem + 1.2vw, 3.75rem);
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Line Heights
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --leading-none:    1;
+  --leading-tight:   1.25;
+  --leading-snug:    1.375;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose:   2;
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Font Weights
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --font-normal:   400;
+  --font-medium:   500;
+  --font-semibold: 600;
+  --font-bold:     700;
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Letter Spacing
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --tracking-tighter: -0.05em;
+  --tracking-tight:   -0.025em;
+  --tracking-normal:  0;
+  --tracking-wide:    0.025em;
+  --tracking-wider:   0.05em;
+  --tracking-widest:  0.1em;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   Typography Presets
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.text-display {
+  font-size: var(--text-5xl);
+  font-weight: var(--font-bold);
+  line-height: var(--leading-none);
+  letter-spacing: var(--tracking-tight);
+}
+
+.text-h1 {
+  font-size: var(--text-4xl);
+  font-weight: var(--font-semibold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+.text-h2 {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-semibold);
+  line-height: var(--leading-tight);
+}
+
+.text-h3 {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-semibold);
+  line-height: var(--leading-snug);
+}
+
+.text-h4 {
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
+  line-height: var(--leading-snug);
+}
+
+.text-body-lg {
+  font-size: var(--text-lg);
+  font-weight: var(--font-normal);
+  line-height: var(--leading-relaxed);
+}
+
+.text-body {
+  font-size: var(--text-base);
+  font-weight: var(--font-normal);
+  line-height: var(--leading-normal);
+}
+
+.text-body-sm {
+  font-size: var(--text-sm);
+  font-weight: var(--font-normal);
+  line-height: var(--leading-normal);
+}
+
+.text-caption {
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  line-height: var(--leading-normal);
+  letter-spacing: var(--tracking-wide);
+}
+
+.text-label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  line-height: var(--leading-none);
+}
+
+.text-button {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  line-height: var(--leading-none);
+  letter-spacing: var(--tracking-wide);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   P0-2: Multilingual Typography (Font Fallback Chains + Language-Specific Rules)
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* Korean - Pretendard Variable optimized for Korean typography */
+:lang(ko) {
+  font-family: 'Pretendard Variable', 'Noto Sans KR', system-ui, sans-serif;
+  word-break: keep-all;
+  word-spacing: 0.1em;
+  letter-spacing: -0.01em;
+}
+
+/* Japanese - Noto Sans JP with fallback to Pretendard */
+:lang(ja) {
+  font-family: 'Noto Sans JP', 'Pretendard Variable', system-ui, sans-serif;
+  word-break: normal;
+  text-rendering: optimizeLegibility;
+}
+
+/* Simplified Chinese - Noto Sans SC optimized */
+:lang(zh-CN) {
+  font-family: 'Noto Sans SC', 'Pretendard Variable', system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'kern' 1;
+}
+
+/* Traditional Chinese - Noto Sans TC optimized */
+:lang(zh-TW) {
+  font-family: 'Noto Sans TC', 'Pretendard Variable', system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'kern' 1;
+}
+
+/* Thai - Noto Sans Thai with adjusted line-height for Thai script */
+:lang(th) {
+  font-family: 'Noto Sans Thai', 'Pretendard Variable', system-ui, sans-serif;
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+}
+
+/* English - Pretendard Variable as primary (supports most Latin) */
+:lang(en) {
+  font-family: 'Pretendard Variable', system-ui, sans-serif;
+  letter-spacing: -0.005em;
+}

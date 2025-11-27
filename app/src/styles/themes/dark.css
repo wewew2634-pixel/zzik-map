@@ -1,0 +1,91 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   ZZIK Design System V3 - Dark Theme (Default)
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Surface Hierarchy
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --surface-base:    var(--color-deep-space-800);  /* #0A1628 - Main background */
+  --surface-raised:  var(--color-deep-space-700);  /* #122340 - Cards, panels */
+  --surface-overlay: var(--color-deep-space-600);  /* #1A3250 - Modals, popovers */
+  --surface-sunken:  var(--color-deep-space-900);  /* #050B14 - Inset areas */
+  --surface-inverse: var(--color-gray-50);         /* #F9FAFB - Light surfaces */
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Text Hierarchy
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --text-primary:   #FFFFFF;
+  --text-secondary: #C5CFE0;                       /* #C5CFE0 - 7:1 on Deep Space #0A1628 (WCAG AAA) */
+  --text-tertiary:  #98A8C0;                       /* #98A8C0 - 5:1 on Deep Space #0A1628 (WCAG AA) */
+  --text-disabled:  var(--color-gray-600);         /* #4B5563 */
+  --text-inverse:   var(--color-deep-space-900);   /* #050B14 */
+  --text-brand:     #FF8A90;                       /* #FF8A90 - 4.5:1 on Deep Space #0A1628 (WCAG AA for interactive) */
+  --text-accent:    #00D9FF;                       /* #00D9FF - 7:1 on Deep Space #0A1628 (WCAG AAA) */
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Border Hierarchy
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --border-subtle:  rgba(255, 255, 255, 0.05);
+  --border-default: rgba(255, 255, 255, 0.10);
+  --border-strong:  rgba(255, 255, 255, 0.20);
+  --border-focus:   var(--color-electric-cyan-500);
+  --border-error:   var(--color-error-500);
+  --border-success: var(--color-success-500);
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Interactive States
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --interactive-primary:        var(--color-zzik-coral-500);
+  --interactive-primary-hover:  var(--color-zzik-coral-400);
+  --interactive-primary-active: var(--color-zzik-coral-600);
+
+  --interactive-secondary:        var(--color-electric-cyan-500);
+  --interactive-secondary-hover:  var(--color-electric-cyan-400);
+  --interactive-secondary-active: var(--color-electric-cyan-600);
+
+  --interactive-ghost:        transparent;
+  --interactive-ghost-hover:  rgba(255, 255, 255, 0.05);
+  --interactive-ghost-active: rgba(255, 255, 255, 0.10);
+
+  --interactive-danger:        var(--color-error-500);
+  --interactive-danger-hover:  var(--color-error-400);
+  --interactive-danger-active: var(--color-error-600);
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Status Colors (Dark Mode Optimized)
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --status-success-bg:   rgba(34, 197, 94, 0.15);
+  --status-success-text: var(--color-success-400);
+  --status-warning-bg:   rgba(245, 158, 11, 0.15);
+  --status-warning-text: var(--color-warning-400);
+  --status-error-bg:     rgba(239, 68, 68, 0.15);
+  --status-error-text:   var(--color-error-400);
+  --status-info-bg:      rgba(59, 130, 246, 0.15);
+  --status-info-text:    var(--color-info-400);
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Input States
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --input-bg:          var(--surface-raised);
+  --input-border:      var(--border-default);
+  --input-placeholder: var(--text-tertiary);
+  --input-focus-ring:  rgba(0, 217, 255, 0.15);
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Scrollbar
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --scrollbar-track: var(--surface-sunken);
+  --scrollbar-thumb: var(--color-deep-space-500);
+  --scrollbar-thumb-hover: var(--color-deep-space-400);
+}

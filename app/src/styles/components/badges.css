@@ -1,0 +1,168 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   ZZIK Design System V3 - Badge Styles
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Base Badge
+   ────────────────────────────────────────────────────────────────────────── */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  line-height: var(--leading-none);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Badge Sizes
+   ────────────────────────────────────────────────────────────────────────── */
+
+.badge-sm {
+  padding: var(--space-0-5) var(--space-1-5);
+  font-size: 0.625rem;
+}
+
+.badge-md {
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-xs);
+}
+
+.badge-lg {
+  padding: var(--space-1-5) var(--space-3);
+  font-size: var(--text-sm);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Brand Badges
+   ────────────────────────────────────────────────────────────────────────── */
+
+.badge-zzik-coral {
+  background: rgba(255, 90, 95, 0.15);
+  color: var(--color-zzik-coral-500);
+}
+
+.badge-electric-cyan {
+  background: rgba(0, 217, 255, 0.15);
+  color: var(--color-electric-cyan-500);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Status Badges
+   ────────────────────────────────────────────────────────────────────────── */
+
+.badge-success {
+  background: var(--status-success-bg);
+  color: var(--status-success-text);
+}
+
+.badge-warning {
+  background: var(--status-warning-bg);
+  color: var(--status-warning-text);
+}
+
+.badge-error {
+  background: var(--status-error-bg);
+  color: var(--status-error-text);
+}
+
+.badge-info {
+  background: var(--status-info-bg);
+  color: var(--status-info-text);
+}
+
+.badge-neutral {
+  background: var(--interactive-ghost-hover);
+  color: var(--text-secondary);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Vibe Category Badges
+   ────────────────────────────────────────────────────────────────────────── */
+
+.badge-vibe-cozy {
+  background: rgba(249, 168, 37, 0.15);
+  color: var(--color-vibe-cozy);
+}
+
+.badge-vibe-modern {
+  background: rgba(124, 77, 255, 0.15);
+  color: var(--color-vibe-modern);
+}
+
+.badge-vibe-vintage {
+  background: rgba(141, 110, 99, 0.15);
+  color: #BCAAA4;
+}
+
+.badge-vibe-minimal {
+  background: rgba(144, 164, 174, 0.15);
+  color: var(--color-vibe-minimal);
+}
+
+.badge-vibe-romantic {
+  background: rgba(236, 64, 122, 0.15);
+  color: var(--color-vibe-romantic);
+}
+
+.badge-vibe-industrial {
+  background: rgba(84, 110, 122, 0.15);
+  color: #78909C;
+}
+
+.badge-vibe-nature {
+  background: rgba(102, 187, 106, 0.15);
+  color: var(--color-vibe-nature);
+}
+
+.badge-vibe-luxury {
+  background: rgba(255, 215, 0, 0.15);
+  color: var(--color-vibe-luxury);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Badge with Dot
+   ────────────────────────────────────────────────────────────────────────── */
+
+.badge-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1-5);
+}
+
+.badge-dot::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Outline Badges
+   ────────────────────────────────────────────────────────────────────────── */
+
+.badge-outline {
+  background: transparent;
+  border: 1px solid currentColor;
+}
+
+.badge-outline.badge-success {
+  border-color: var(--status-success-text);
+}
+
+.badge-outline.badge-warning {
+  border-color: var(--status-warning-text);
+}
+
+.badge-outline.badge-error {
+  border-color: var(--status-error-text);
+}
+
+.badge-outline.badge-info {
+  border-color: var(--status-info-text);
+}

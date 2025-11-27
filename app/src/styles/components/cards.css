@@ -1,0 +1,157 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   ZZIK Design System V3 - Card Styles
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Base Card
+   ────────────────────────────────────────────────────────────────────────── */
+
+.card {
+  background: var(--surface-raised);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-subtle);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Card Variants
+   ────────────────────────────────────────────────────────────────────────── */
+
+.card-interactive {
+  background: var(--surface-raised);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.card-interactive:hover {
+  background: var(--surface-overlay);
+  border-color: var(--border-default);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.card-interactive:active {
+  transform: translateY(0);
+}
+
+.card-interactive:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+.card-elevated {
+  background: var(--surface-overlay);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-outlined {
+  background: transparent;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-default);
+}
+
+.card-ghost {
+  background: transparent;
+  border-radius: var(--radius-xl);
+  border: 1px solid transparent;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Card States
+   ────────────────────────────────────────────────────────────────────────── */
+
+.card-selected {
+  border-color: var(--interactive-primary);
+  box-shadow: 0 0 0 1px var(--interactive-primary);
+}
+
+.card-error {
+  border-color: var(--border-error);
+}
+
+.card-success {
+  border-color: var(--border-success);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Card Padding
+   ────────────────────────────────────────────────────────────────────────── */
+
+.card-p-none { padding: 0; }
+.card-p-sm   { padding: var(--space-3); }
+.card-p-md   { padding: var(--space-4); }
+.card-p-lg   { padding: var(--space-6); }
+.card-p-xl   { padding: var(--space-8); }
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Elevation Levels
+   ────────────────────────────────────────────────────────────────────────── */
+
+.elevation-0 {
+  background: var(--surface-base);
+  box-shadow: none;
+}
+
+.elevation-1 {
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-sm);
+}
+
+.elevation-2 {
+  background: var(--surface-overlay);
+  box-shadow: var(--shadow-lg);
+}
+
+.elevation-3 {
+  background: var(--surface-overlay);
+  box-shadow: var(--shadow-xl);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Glass Effects
+   ────────────────────────────────────────────────────────────────────────── */
+
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+}
+
+.glass-dark {
+  background: rgba(10, 22, 40, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+}
+
+.glass-coral {
+  background: rgba(255, 90, 95, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 90, 95, 0.2);
+  border-radius: var(--radius-xl);
+}
+
+.glass-cyan {
+  background: rgba(0, 217, 255, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 217, 255, 0.2);
+  border-radius: var(--radius-xl);
+}
+
+/* Blur Intensity */
+.glass-blur-sm  { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.glass-blur-md  { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+.glass-blur-lg  { backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+.glass-blur-xl  { backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px); }

@@ -1,0 +1,136 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   ZZIK Design System V3 - Color Tokens
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+@theme {
+  /* ──────────────────────────────────────────────────────────────────────────
+     Gray Scale (Neutral)
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --color-gray-50:  #F9FAFB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-300: #D1D5DB;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #4B5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1F2937;
+  --color-gray-900: #111827;
+  --color-gray-950: #030712;
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     ZZIK Coral (Primary Brand)
+     Purpose: 주요 CTA, 브랜드 강조, 활성 상태
+     Psychology: 열정, 여행의 설렘, 한국의 따뜻함
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --color-zzik-coral-50:  #FFF5F5;
+  --color-zzik-coral-100: #FFE5E6;
+  --color-zzik-coral-200: #FFCCD0;
+  --color-zzik-coral-300: #FFA3A8;
+  --color-zzik-coral-400: #FF7A80;
+  --color-zzik-coral-500: #FF5A5F;
+  --color-zzik-coral-600: #E84E52;
+  --color-zzik-coral-700: #CC4246;
+  --color-zzik-coral-800: #A3353A;
+  --color-zzik-coral-900: #7A282C;
+  --color-zzik-coral-950: #4A1A1C;
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Deep Space (Background)
+     Purpose: 배경, 표면, 컨테이너
+     Psychology: 신뢰, 안정감, 프리미엄
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --color-deep-space-50:  #E8EBF0;
+  --color-deep-space-100: #C5CDD9;
+  --color-deep-space-200: #9DABC0;
+  --color-deep-space-300: #7589A6;
+  --color-deep-space-400: #506B8C;
+  --color-deep-space-500: #2D4A6B;
+  --color-deep-space-600: #1A3250;
+  --color-deep-space-700: #122340;
+  --color-deep-space-800: #0A1628;
+  --color-deep-space-900: #050B14;
+  --color-deep-space-950: #020408;
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Electric Cyan (Accent)
+     Purpose: 보조 강조, 인터랙션, 포커스
+     Psychology: 발견, 기술, 미래지향
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --color-electric-cyan-50:  #E5FCFF;
+  --color-electric-cyan-100: #CCF9FF;
+  --color-electric-cyan-200: #99F3FF;
+  --color-electric-cyan-300: #66ECFF;
+  --color-electric-cyan-400: #33E6FF;
+  --color-electric-cyan-500: #00D9FF;
+  --color-electric-cyan-600: #00B8D9;
+  --color-electric-cyan-700: #0097B3;
+  --color-electric-cyan-800: #00768C;
+  --color-electric-cyan-900: #005566;
+  --color-electric-cyan-950: #003D4D;
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Status Colors
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --color-success-50:  #F0FDF4;
+  --color-success-100: #DCFCE7;
+  --color-success-200: #BBF7D0;
+  --color-success-300: #86EFAC;
+  --color-success-400: #4ADE80;
+  --color-success-500: #22C55E;
+  --color-success-600: #16A34A;
+  --color-success-700: #15803D;
+  --color-success-800: #166534;
+  --color-success-900: #14532D;
+
+  --color-warning-50:  #FFFBEB;
+  --color-warning-100: #FEF3C7;
+  --color-warning-200: #FDE68A;
+  --color-warning-300: #FCD34D;
+  --color-warning-400: #FBBF24;
+  --color-warning-500: #F59E0B;
+  --color-warning-600: #D97706;
+  --color-warning-700: #B45309;
+  --color-warning-800: #92400E;
+  --color-warning-900: #78350F;
+
+  --color-error-50:  #FEF2F2;
+  --color-error-100: #FEE2E2;
+  --color-error-200: #FECACA;
+  --color-error-300: #FCA5A5;
+  --color-error-400: #F87171;
+  --color-error-500: #EF4444;
+  --color-error-600: #DC2626;
+  --color-error-700: #B91C1C;
+  --color-error-800: #991B1B;
+  --color-error-900: #7F1D1D;
+
+  --color-info-50:  #EFF6FF;
+  --color-info-100: #DBEAFE;
+  --color-info-200: #BFDBFE;
+  --color-info-300: #93C5FD;
+  --color-info-400: #60A5FA;
+  --color-info-500: #3B82F6;
+  --color-info-600: #2563EB;
+  --color-info-700: #1D4ED8;
+  --color-info-800: #1E40AF;
+  --color-info-900: #1E3A8A;
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Vibe Category Colors
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --color-vibe-cozy:       #F9A825;
+  --color-vibe-modern:     #7C4DFF;
+  --color-vibe-vintage:    #8D6E63;
+  --color-vibe-minimal:    #90A4AE;
+  --color-vibe-romantic:   #EC407A;
+  --color-vibe-industrial: #546E7A;
+  --color-vibe-nature:     #66BB6A;
+  --color-vibe-luxury:     #FFD700;
+}

@@ -1,0 +1,304 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   ZZIK Design System V3 - Journey Patterns
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Journey Timeline
+   ────────────────────────────────────────────────────────────────────────── */
+
+.journey-timeline {
+  position: relative;
+  padding-left: 2rem;
+  /* Mobile-first: reduce padding on smaller screens */
+  @media (max-width: 640px) {
+    padding-left: 1.5rem;
+  }
+}
+
+.journey-timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.75rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    var(--color-zzik-coral-500),
+    var(--color-electric-cyan-500)
+  );
+  /* Subtle animation on larger screens */
+  @media (prefers-reduced-motion: no-preference) and (min-width: 768px) {
+    transition: box-shadow var(--duration-normal) var(--ease-out);
+  }
+}
+
+.journey-timeline-horizontal {
+  display: flex;
+  padding-left: 0;
+  padding-top: 2rem;
+}
+
+.journey-timeline-horizontal::before {
+  left: 0;
+  right: 0;
+  top: 0.75rem;
+  bottom: auto;
+  width: auto;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    var(--color-zzik-coral-500),
+    var(--color-electric-cyan-500)
+  );
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Journey Node
+   ────────────────────────────────────────────────────────────────────────── */
+
+.journey-node {
+  position: relative;
+  margin-bottom: 1.5rem;
+  padding-left: 1rem;
+  /* Reduce spacing on mobile */
+  @media (max-width: 640px) {
+    margin-bottom: 1rem;
+    padding-left: 0.75rem;
+  }
+}
+
+.journey-node:last-child {
+  margin-bottom: 0;
+}
+
+.journey-node-marker {
+  position: absolute;
+  left: -1.25rem;
+  top: 0.125rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: var(--surface-raised);
+  border: 2px solid var(--color-zzik-coral-500);
+  box-shadow: 0 0 0 4px var(--surface-base);
+  transition: all var(--duration-fast) var(--ease-out);
+  will-change: background, border-color, box-shadow;
+  /* Smaller marker on mobile */
+  @media (max-width: 640px) {
+    width: 0.625rem;
+    height: 0.625rem;
+    left: -1.0625rem;
+  }
+}
+
+.journey-node.is-completed .journey-node-marker {
+  background: var(--color-success-500);
+  border-color: var(--color-success-500);
+}
+
+.journey-node.is-active .journey-node-marker {
+  background: var(--color-electric-cyan-500);
+  border-color: var(--color-electric-cyan-500);
+  box-shadow:
+    0 0 0 4px var(--surface-base),
+    0 0 0 8px rgba(0, 217, 255, 0.2);
+  animation: pulse-glow-cyan 2s ease-in-out infinite;
+}
+
+.journey-node.is-upcoming .journey-node-marker {
+  background: var(--surface-raised);
+  border-color: var(--text-tertiary);
+}
+
+.journey-node-label {
+  display: block;
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+}
+
+.journey-node-time {
+  display: block;
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  margin-top: var(--space-0-5);
+}
+
+.journey-node-description {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Photo Upload Zone
+   ────────────────────────────────────────────────────────────────────────── */
+
+.photo-upload-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: var(--space-8);
+  border: 2px dashed var(--border-default);
+  border-radius: var(--radius-2xl);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out);
+  /* Mobile-first responsive padding */
+  @media (max-width: 640px) {
+    min-height: 160px;
+    padding: var(--space-6);
+  }
+  @media (min-width: 768px) and (max-width: 1024px) {
+    padding: var(--space-6);
+  }
+}
+
+.photo-upload-zone:hover {
+  border-color: var(--interactive-primary);
+  background: rgba(255, 90, 95, 0.05);
+}
+
+.photo-upload-zone:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+.photo-upload-zone.is-dragging {
+  border-color: var(--interactive-secondary);
+  border-style: solid;
+  background: rgba(0, 217, 255, 0.05);
+}
+
+.photo-upload-zone.has-error {
+  border-color: var(--border-error);
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.photo-upload-zone.is-success {
+  border-color: var(--border-success);
+  background: rgba(34, 197, 94, 0.05);
+}
+
+.photo-upload-zone:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.photo-upload-zone-icon {
+  width: 3rem;
+  height: 3rem;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-4);
+  /* Smaller icon on mobile */
+  @media (max-width: 640px) {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: var(--space-3);
+  }
+}
+
+.photo-upload-zone-text {
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.photo-upload-zone-hint {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  margin-top: var(--space-2);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Recommendation Card
+   ────────────────────────────────────────────────────────────────────────── */
+
+.recommendation-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.recommendation-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-default);
+}
+
+.recommendation-card-image {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.recommendation-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--duration-slow) var(--ease-out);
+}
+
+.recommendation-card:hover .recommendation-card-image img {
+  transform: scale(1.05);
+}
+
+.recommendation-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(5, 11, 20, 0.9) 0%,
+    rgba(5, 11, 20, 0.5) 40%,
+    transparent 70%
+  );
+}
+
+.recommendation-card-badge {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+}
+
+.recommendation-card-content {
+  padding: var(--space-4);
+}
+
+.recommendation-card-title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.recommendation-card-location {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.recommendation-card-stats {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.recommendation-card-stat {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}

@@ -1,0 +1,247 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   ZZIK Design System V3 - Motion Tokens
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+@theme {
+  /* ──────────────────────────────────────────────────────────────────────────
+     Duration Scale
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --duration-instant:  0ms;
+  --duration-fast:     100ms;
+  --duration-normal:   200ms;
+  --duration-slow:     300ms;
+  --duration-slower:   500ms;
+  --duration-slowest:  700ms;
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Easing Functions
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --ease-linear:  linear;
+  --ease-in:      cubic-bezier(0.4, 0, 1, 1);
+  --ease-out:     cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out:  cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce:  cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-smooth:  cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-snap:    cubic-bezier(0.2, 0, 0, 1);
+  --ease-spring:  cubic-bezier(0.5, 1.5, 0.5, 1);
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Shadow Scale
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --shadow-xs:    0 1px 2px 0 rgba(0, 0, 0, 0.25);
+  --shadow-sm:    0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+  --shadow-md:    0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --shadow-lg:    0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+  --shadow-xl:    0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+  --shadow-2xl:   0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+
+  /* Glow Effects */
+  --shadow-glow-coral: 0 0 20px rgba(255, 90, 95, 0.4);
+  --shadow-glow-cyan:  0 0 20px rgba(0, 217, 255, 0.4);
+  --shadow-glow-white: 0 0 20px rgba(255, 255, 255, 0.2);
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Z-Index Scale
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --z-negative:       -1;
+  --z-base:           0;
+  --z-raised:         1;
+  --z-dropdown:       10;
+  --z-sticky:         20;
+  --z-fixed:          30;
+  --z-modal-backdrop: 40;
+  --z-modal:          50;
+  --z-popover:        60;
+  --z-tooltip:        70;
+  --z-toast:          80;
+  --z-max:            9999;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   Semantic Motion Tokens
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Semantic Durations */
+  --duration-hover:    var(--duration-fast);
+  --duration-focus:    var(--duration-fast);
+  --duration-active:   var(--duration-instant);
+  --duration-enter:    var(--duration-normal);
+  --duration-exit:     var(--duration-fast);
+  --duration-expand:   var(--duration-slow);
+  --duration-collapse: var(--duration-normal);
+  --duration-page:     var(--duration-slower);
+
+  /* Semantic Easings */
+  --ease-enter: var(--ease-out);
+  --ease-exit:  var(--ease-in);
+  --ease-move:  var(--ease-in-out);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   Keyframe Animations
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes scale-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.95); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-left {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slide-right {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes pulse-glow-coral {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 90, 95, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(255, 90, 95, 0); }
+}
+
+@keyframes pulse-glow-cyan {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 217, 255, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(0, 217, 255, 0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   Animation Classes
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.animate-fade-in     { animation: fade-in var(--duration-normal) var(--ease-enter); }
+.animate-fade-out    { animation: fade-out var(--duration-fast) var(--ease-exit); }
+.animate-scale-in    { animation: scale-in var(--duration-normal) var(--ease-enter); }
+.animate-scale-out   { animation: scale-out var(--duration-fast) var(--ease-exit); }
+.animate-slide-up    { animation: slide-up var(--duration-slow) var(--ease-enter); }
+.animate-slide-down  { animation: slide-down var(--duration-slow) var(--ease-enter); }
+.animate-slide-left  { animation: slide-left var(--duration-slow) var(--ease-enter); }
+.animate-slide-right { animation: slide-right var(--duration-slow) var(--ease-enter); }
+
+.animate-spin   { animation: spin 1s linear infinite; }
+.animate-pulse  { animation: pulse 2s ease-in-out infinite; }
+.animate-bounce { animation: bounce 1s ease-in-out infinite; }
+.animate-float  { animation: float 3s ease-in-out infinite; }
+
+.animate-glow-coral { animation: pulse-glow-coral 2s ease-in-out infinite; }
+.animate-glow-cyan  { animation: pulse-glow-cyan 2s ease-in-out infinite; }
+
+.animate-shimmer {
+  animation: shimmer 1.5s infinite;
+  background: linear-gradient(90deg,
+    var(--surface-raised) 25%,
+    var(--surface-overlay) 50%,
+    var(--surface-raised) 75%);
+  background-size: 200% 100%;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   Transition Utilities
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.transition-colors {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--ease-move);
+  transition-duration: var(--duration-fast);
+}
+
+.transition-opacity {
+  transition-property: opacity;
+  transition-timing-function: var(--ease-move);
+  transition-duration: var(--duration-normal);
+}
+
+.transition-transform {
+  transition-property: transform;
+  transition-timing-function: var(--ease-move);
+  transition-duration: var(--duration-normal);
+}
+
+.transition-shadow {
+  transition-property: box-shadow;
+  transition-timing-function: var(--ease-move);
+  transition-duration: var(--duration-fast);
+}
+
+.transition-all {
+  transition-property: all;
+  transition-timing-function: var(--ease-move);
+  transition-duration: var(--duration-normal);
+}
+
+.transition-interactive {
+  transition-property: color, background-color, border-color, box-shadow, transform;
+  transition-timing-function: var(--ease-move);
+  transition-duration: var(--duration-fast);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   Reduced Motion
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

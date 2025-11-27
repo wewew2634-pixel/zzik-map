@@ -1,0 +1,182 @@
+{
+  "common": {
+    "appName": "ZZIK MAP",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "share": "Share",
+    "copy": "Copy",
+    "download": "Download"
+  },
+  "nav": {
+    "home": "Home",
+    "journey": "Journey",
+    "vibe": "Vibe",
+    "mapBox": "MAP BOX",
+    "myPage": "My Page",
+    "settings": "Settings",
+    "explore": "Explore"
+  },
+  "landing": {
+    "badge": "K-Travel Discovery Platform",
+    "subtitle": "Discover Real Korea Through Photos",
+    "headline1": "With one photo, know where",
+    "headline2": "travelers",
+    "headline3": "went next",
+    "ctaUpload": "Upload Your Photo",
+    "ctaExplore": "Explore Destinations",
+    "stats": {
+      "destinations": "Destinations",
+      "travelers": "Travelers",
+      "patterns": "Journey Patterns"
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "Discover your next destination in 3 simple steps",
+      "sectionLabel": "Simple Process",
+      "step1": {
+        "title": "Upload Photo",
+        "description": "Share your travel photo. We extract GPS from EXIF data automatically."
+      },
+      "step2": {
+        "title": "AI Analysis",
+        "description": "Our AI identifies the location and analyzes the vibe of your photo."
+      },
+      "step3": {
+        "title": "Discover Next",
+        "description": "See where similar travelers went based on crowd wisdom."
+      }
+    },
+    "journeySection": {
+      "label": "Journey Intelligence",
+      "title1": "Know Where",
+      "title2": "Others Went",
+      "description": "After visiting Gyeongbokgung, {count} travelers went to Bukchon Hanok Village. Our Journey Intelligence shows you real travel patterns from real travelers.",
+      "cta": "Try Journey Intelligence",
+      "from": "Starting from",
+      "whereDidGo": "Where did {count} travelers go next?"
+    },
+    "finalCta": {
+      "title1": "Ready to Discover",
+      "title2": "Your Next Destination?",
+      "description": "Upload your travel photo and let our AI reveal where similar travelers went next.",
+      "button": "Start Your Journey"
+    },
+    "footer": {
+      "tagline": "Discover Real Korea",
+      "poweredBy": "Powered by Gemini AI & Crowd Wisdom"
+    }
+  },
+  "hero": {
+    "title": "With One Photo",
+    "subtitle": "Discover Your Next Destination",
+    "tagline": "See where 847 travelers went next",
+    "cta": "Upload Photo",
+    "exploreCta": "Explore"
+  },
+  "journey": {
+    "title": "Journey Intelligence",
+    "uploadPrompt": "Upload your travel photo",
+    "uploadHint": "Supports JPEG, PNG, WebP (max 10MB)",
+    "analyzing": "Analyzing...",
+    "extractingLocation": "Extracting location...",
+    "noGps": "No GPS data found",
+    "selectLocation": "Please select a location",
+    "recommendations": "Recommended Destinations",
+    "travelers": "travelers",
+    "wentHere": "went here next",
+    "similarity": "Similarity",
+    "viewDetails": "View Details",
+    "startingFrom": "Starting from",
+    "totalTravelers": "{count} travelers total",
+    "nextDestinations": "Next Destinations",
+    "noRecommendations": "No recommendations available",
+    "uploadAnother": "Upload another photo",
+    "selectFromList": "Select from list"
+  },
+  "explore": {
+    "title": "Explore",
+    "subtitle": "Discover popular destinations in Korea",
+    "searchPlaceholder": "Search locations...",
+    "categories": {
+      "all": "All",
+      "landmark": "Landmarks",
+      "cafe": "Cafes",
+      "shopping": "Shopping",
+      "entertainment": "Entertainment",
+      "nature": "Nature"
+    },
+    "noResults": "No results found",
+    "loadMore": "Load more"
+  },
+  "vibe": {
+    "title": "Vibe Matching",
+    "findSimilar": "Find places with this vibe",
+    "vibes": {
+      "cozy": "Cozy",
+      "modern": "Modern",
+      "traditional": "Traditional",
+      "peaceful": "Peaceful",
+      "artistic": "Artistic",
+      "vintage": "Vintage",
+      "minimalist": "Minimalist",
+      "vibrant": "Vibrant",
+      "romantic": "Romantic",
+      "adventurous": "Adventurous"
+    },
+    "matchScore": "Match Score",
+    "primaryVibe": "Primary Vibe",
+    "secondaryVibes": "Secondary Vibes"
+  },
+  "upload": {
+    "dragDrop": "Drag and drop your photo here",
+    "orClick": "or click to select",
+    "uploading": "Uploading...",
+    "processing": "Processing...",
+    "success": "Upload complete!",
+    "failed": "Upload failed",
+    "maxSize": "Max file size: {size}MB",
+    "supportedFormats": "Supported formats: {formats}"
+  },
+  "toast": {
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Info",
+    "photoUploaded": "Photo uploaded successfully",
+    "locationFound": "Location found",
+    "analysisComplete": "Analysis complete",
+    "copySuccess": "Copied to clipboard"
+  },
+  "errors": {
+    "networkError": "Network error occurred",
+    "serverError": "Server error occurred",
+    "notFound": "Not found",
+    "unauthorized": "Authentication required",
+    "fileTooLarge": "File is too large",
+    "unsupportedFormat": "Unsupported format",
+    "tryAgain": "Please try again later",
+    "somethingWrong": "Something went wrong",
+    "unexpectedError": "We encountered an unexpected error. Please try again.",
+    "tryAgainBtn": "Try Again",
+    "reloadPage": "Reload Page"
+  },
+  "footer": {
+    "copyright": "2025 ZZIK MAP. All rights reserved.",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "contact": "Contact Us"
+  }
+}

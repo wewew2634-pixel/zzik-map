@@ -1,0 +1,106 @@
+{
+  "common": {
+    "appName": "ZZIK MAP",
+    "loading": "กำลังโหลด...",
+    "error": "เกิดข้อผิดพลาด",
+    "retry": "ลองอีกครั้ง",
+    "cancel": "ยกเลิก",
+    "confirm": "ยืนยัน",
+    "save": "บันทึก",
+    "delete": "ลบ",
+    "edit": "แก้ไข",
+    "close": "ปิด",
+    "back": "กลับ",
+    "next": "ถัดไป",
+    "previous": "ก่อนหน้า",
+    "search": "ค้นหา",
+    "filter": "กรอง",
+    "sort": "เรียงลำดับ",
+    "share": "แชร์",
+    "copy": "คัดลอก",
+    "download": "ดาวน์โหลด"
+  },
+  "nav": {
+    "home": "หน้าหลัก",
+    "journey": "การเดินทาง",
+    "vibe": "บรรยากาศ",
+    "mapBox": "MAP BOX",
+    "myPage": "หน้าของฉัน",
+    "settings": "การตั้งค่า"
+  },
+  "hero": {
+    "title": "ด้วยรูปภาพเดียว",
+    "subtitle": "ค้นพบจุดหมายถัดไปของคุณ",
+    "tagline": "ดูว่า 847 นักเดินทางไปที่ไหนต่อ",
+    "cta": "อัปโหลดรูปภาพ",
+    "exploreCta": "สำรวจ"
+  },
+  "journey": {
+    "title": "Journey Intelligence",
+    "uploadPrompt": "อัปโหลดรูปภาพการเดินทางของคุณ",
+    "uploadHint": "รองรับ JPEG, PNG, WebP (สูงสุด 10MB)",
+    "analyzing": "กำลังวิเคราะห์...",
+    "extractingLocation": "กำลังดึงตำแหน่ง...",
+    "noGps": "ไม่พบข้อมูล GPS",
+    "selectLocation": "กรุณาเลือกตำแหน่ง",
+    "recommendations": "จุดหมายที่แนะนำ",
+    "travelers": "นักเดินทาง",
+    "wentHere": "ไปที่นี่ต่อ",
+    "similarity": "ความคล้ายคลึง",
+    "viewDetails": "ดูรายละเอียด"
+  },
+  "vibe": {
+    "title": "การจับคู่บรรยากาศ",
+    "findSimilar": "ค้นหาสถานที่ที่มีบรรยากาศคล้ายกัน",
+    "vibes": {
+      "cozy": "อบอุ่น",
+      "modern": "ทันสมัย",
+      "traditional": "ดั้งเดิม",
+      "peaceful": "สงบ",
+      "artistic": "ศิลปะ",
+      "vintage": "วินเทจ",
+      "minimalist": "มินิมอล",
+      "vibrant": "มีชีวิตชีวา",
+      "romantic": "โรแมนติก",
+      "adventurous": "ผจญภัย"
+    },
+    "matchScore": "คะแนนจับคู่",
+    "primaryVibe": "บรรยากาศหลัก",
+    "secondaryVibes": "บรรยากาศรอง"
+  },
+  "upload": {
+    "dragDrop": "ลากและวางรูปภาพที่นี่",
+    "orClick": "หรือคลิกเพื่อเลือก",
+    "uploading": "กำลังอัปโหลด...",
+    "processing": "กำลังประมวลผล...",
+    "success": "อัปโหลดสำเร็จ!",
+    "failed": "อัปโหลดล้มเหลว",
+    "maxSize": "ขนาดไฟล์สูงสุด: {size}MB",
+    "supportedFormats": "รูปแบบที่รองรับ: {formats}"
+  },
+  "toast": {
+    "success": "สำเร็จ",
+    "error": "ข้อผิดพลาด",
+    "warning": "คำเตือน",
+    "info": "ข้อมูล",
+    "photoUploaded": "อัปโหลดรูปภาพสำเร็จ",
+    "locationFound": "พบตำแหน่งแล้ว",
+    "analysisComplete": "การวิเคราะห์เสร็จสิ้น",
+    "copySuccess": "คัดลอกไปยังคลิปบอร์ดแล้ว"
+  },
+  "errors": {
+    "networkError": "เกิดข้อผิดพลาดเครือข่าย",
+    "serverError": "เกิดข้อผิดพลาดเซิร์ฟเวอร์",
+    "notFound": "ไม่พบ",
+    "unauthorized": "ต้องการการยืนยันตัวตน",
+    "fileTooLarge": "ไฟล์ใหญ่เกินไป",
+    "unsupportedFormat": "รูปแบบไม่รองรับ",
+    "tryAgain": "กรุณาลองอีกครั้งในภายหลัง"
+  },
+  "footer": {
+    "copyright": "2025 ZZIK MAP. สงวนลิขสิทธิ์",
+    "terms": "เงื่อนไขการใช้บริการ",
+    "privacy": "นโยบายความเป็นส่วนตัว",
+    "contact": "ติดต่อเรา"
+  }
+}

@@ -1,0 +1,244 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   ZZIK Design System V3 - Icon System Tokens
+   ══════════════════════════════════════════════════════════════════════════════
+
+   Centralized icon sizing, stroke widths, and rendering specifications
+   Part of V7 Icon System (replaces 42+ scattered inline SVG definitions)
+
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+@theme {
+  /* ──────────────────────────────────────────────────────────────────────────
+     Icon Sizing Tokens
+     Matches Tailwind sizing scale for consistency
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --icon-xs: 0.75rem;  /* 12px - Small badges, minimal UI */
+  --icon-sm: 1rem;     /* 16px - Form controls, inline icons */
+  --icon-md: 1.25rem;  /* 20px - Standard component icons */
+  --icon-lg: 1.5rem;   /* 24px - Card headers, prominent icons */
+  --icon-xl: 2rem;     /* 32px - Hero sections, decorative */
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Icon Rendering Tokens
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --icon-stroke-width: 1.5;      /* Default stroke width for outlined icons */
+  --icon-stroke-linecap: round;  /* Round line caps for smooth appearance */
+  --icon-stroke-linejoin: round; /* Round line joins for soft corners */
+  --icon-viewbox-size: 20;       /* Standard viewBox size (20x20) */
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   Icon Rendering Classes
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.icon {
+  /* Base icon rendering properties */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  /* Text rendering optimization */
+  font-feature-settings: inherit;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* SVG fill/stroke optimization */
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: var(--icon-stroke-width);
+  stroke-linecap: var(--icon-stroke-linecap);
+  stroke-linejoin: var(--icon-stroke-linejoin);
+
+  /* High-contrast mode: Force visible stroke/fill */
+  forced-colors: CanvasText;
+  forced-colors-stroke: CanvasText;
+  forced-colors-fill: CanvasText;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Icon Size Variants
+   ────────────────────────────────────────────────────────────────────────── */
+
+.icon-xs {
+  width: var(--icon-xs);
+  height: var(--icon-xs);
+}
+
+.icon-sm {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+}
+
+.icon-md {
+  width: var(--icon-md);
+  height: var(--icon-md);
+}
+
+.icon-lg {
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+}
+
+.icon-xl {
+  width: var(--icon-xl);
+  height: var(--icon-xl);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Icon Color States
+   ────────────────────────────────────────────────────────────────────────── */
+
+.icon-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.icon-muted {
+  opacity: 0.6;
+}
+
+.icon-interactive:hover {
+  opacity: 0.8;
+  transition: opacity 200ms ease-out;
+}
+
+.icon-success {
+  color: var(--color-success-500);
+}
+
+.icon-error {
+  color: var(--color-error-500);
+}
+
+.icon-warning {
+  color: var(--color-warning-500);
+}
+
+.icon-info {
+  color: var(--color-info-500);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Icon Button Integration
+   ────────────────────────────────────────────────────────────────────────── */
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  transition: background-color 150ms ease-out;
+  cursor: pointer;
+}
+
+.icon-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.icon-button:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+.icon-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Icon Animation Framework
+   ────────────────────────────────────────────────────────────────────────── */
+
+.icon-spin {
+  animation: spin 1s linear infinite;
+}
+
+.icon-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.icon-bounce {
+  animation: bounce 1s infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.25rem);
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Accessibility: High-Contrast Mode
+   ────────────────────────────────────────────────────────────────────────── */
+
+@media (prefers-contrast: high) {
+  .icon {
+    stroke-width: calc(var(--icon-stroke-width) * 1.2);
+  }
+}
+
+@media (forced-colors: active) {
+  .icon {
+    forced-colors: CanvasText;
+    stroke: CanvasText;
+    fill: CanvasText;
+  }
+
+  .icon-success {
+    color: CanvasText;
+  }
+
+  .icon-error {
+    color: CanvasText;
+  }
+
+  .icon-warning {
+    color: CanvasText;
+  }
+
+  .icon-info {
+    color: CanvasText;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Accessibility: Reduced Motion
+   ────────────────────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .icon-spin,
+  .icon-pulse,
+  .icon-bounce {
+    animation: none;
+  }
+
+  .icon-interactive:hover {
+    transition: none;
+  }
+}

@@ -1,0 +1,111 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   ZZIK Design System V3 - Light Theme
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Surface Hierarchy
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --surface-base:    var(--color-gray-50);   /* #F9FAFB - Main background */
+  --surface-raised:  #FFFFFF;                 /* White - Cards, panels */
+  --surface-overlay: #FFFFFF;                 /* White - Modals, popovers */
+  --surface-sunken:  var(--color-gray-100);  /* #F3F4F6 - Inset areas */
+  --surface-inverse: var(--color-deep-space-800); /* #0A1628 - Dark surfaces */
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Text Hierarchy
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --text-primary:   var(--color-gray-900);        /* #111827 */
+  --text-secondary: var(--color-gray-600);        /* #4B5563 */
+  --text-tertiary:  var(--color-gray-500);        /* #6B7280 */
+  --text-disabled:  var(--color-gray-400);        /* #9CA3AF */
+  --text-inverse:   #FFFFFF;
+  --text-brand:     var(--color-zzik-coral-600);  /* Darker coral for light bg */
+  --text-accent:    var(--color-electric-cyan-700); /* Darker cyan for light bg */
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Border Hierarchy
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --border-subtle:  rgba(0, 0, 0, 0.05);
+  --border-default: rgba(0, 0, 0, 0.10);
+  --border-strong:  rgba(0, 0, 0, 0.20);
+  --border-focus:   var(--color-electric-cyan-600);
+  --border-error:   var(--color-error-600);
+  --border-success: var(--color-success-600);
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Interactive States
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --interactive-primary:        var(--color-zzik-coral-500);
+  --interactive-primary-hover:  var(--color-zzik-coral-600);
+  --interactive-primary-active: var(--color-zzik-coral-700);
+
+  --interactive-secondary:        var(--color-electric-cyan-600);
+  --interactive-secondary-hover:  var(--color-electric-cyan-700);
+  --interactive-secondary-active: var(--color-electric-cyan-800);
+
+  --interactive-ghost:        transparent;
+  --interactive-ghost-hover:  rgba(0, 0, 0, 0.05);
+  --interactive-ghost-active: rgba(0, 0, 0, 0.10);
+
+  --interactive-danger:        var(--color-error-600);
+  --interactive-danger-hover:  var(--color-error-700);
+  --interactive-danger-active: var(--color-error-800);
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Status Colors (Light Mode Optimized)
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --status-success-bg:   var(--color-success-50);
+  --status-success-text: var(--color-success-700);
+  --status-warning-bg:   var(--color-warning-50);
+  --status-warning-text: var(--color-warning-700);
+  --status-error-bg:     var(--color-error-50);
+  --status-error-text:   var(--color-error-700);
+  --status-info-bg:      var(--color-info-50);
+  --status-info-text:    var(--color-info-700);
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Input States
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --input-bg:          #FFFFFF;
+  --input-border:      var(--border-default);
+  --input-placeholder: var(--text-tertiary);
+  --input-focus-ring:  rgba(0, 184, 217, 0.15);
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Scrollbar
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --scrollbar-track: var(--color-gray-100);
+  --scrollbar-thumb: var(--color-gray-300);
+  --scrollbar-thumb-hover: var(--color-gray-400);
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     Shadows (Light mode uses softer shadows)
+     ────────────────────────────────────────────────────────────────────────── */
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   High Contrast Mode Override
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-contrast: high) {
+  [data-theme="light"] {
+    --border-default: rgba(0, 0, 0, 0.3);
+    --border-strong: rgba(0, 0, 0, 0.5);
+    --text-secondary: var(--color-gray-700);
+  }
+}

@@ -1,0 +1,215 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   ZZIK Design System V3 - Button Styles
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Base Button
+   ────────────────────────────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2-5) var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  line-height: var(--leading-none);
+  letter-spacing: var(--tracking-wide);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: var(--transition-interactive);
+  user-select: none;
+  white-space: nowrap;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Button Variants
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* Primary (ZZIK Coral) */
+.btn-primary {
+  background: var(--interactive-primary);
+  color: white;
+  border: 1px solid var(--color-zzik-coral-600);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--interactive-primary-hover);
+}
+
+.btn-primary:active:not(:disabled) {
+  background: var(--interactive-primary-active);
+  transform: scale(0.98);
+}
+
+/* Secondary (Electric Cyan) */
+.btn-secondary {
+  background: var(--interactive-secondary);
+  color: var(--color-deep-space-900);
+  border: 1px solid var(--color-electric-cyan-600);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--interactive-secondary-hover);
+}
+
+.btn-secondary:active:not(:disabled) {
+  background: var(--interactive-secondary-active);
+  transform: scale(0.98);
+}
+
+/* Ghost */
+.btn-ghost {
+  background: var(--interactive-ghost);
+  color: var(--text-primary);
+  border: 1px solid transparent;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: var(--interactive-ghost-hover);
+}
+
+.btn-ghost:active:not(:disabled) {
+  background: var(--interactive-ghost-active);
+}
+
+/* Outline */
+.btn-outline {
+  background: transparent;
+  color: var(--interactive-primary);
+  border: 1px solid var(--interactive-primary);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: rgba(255, 90, 95, 0.1);
+}
+
+.btn-outline:active:not(:disabled) {
+  background: rgba(255, 90, 95, 0.2);
+}
+
+/* Danger */
+.btn-danger {
+  background: var(--interactive-danger);
+  color: white;
+  border: 1px solid var(--color-error-700);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--interactive-danger-hover);
+}
+
+.btn-danger:active:not(:disabled) {
+  background: var(--interactive-danger-active);
+  transform: scale(0.98);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Button Sizes
+   WCAG 2.1 Touch Target: 44×44px minimum (mobile)
+   ────────────────────────────────────────────────────────────────────────── */
+
+.btn-xs {
+  padding: var(--space-2) var(--space-2-5);
+  font-size: var(--text-xs);
+  min-height: 44px;
+}
+
+.btn-sm {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  min-height: 44px;
+}
+
+.btn-md {
+  padding: var(--space-2-5) var(--space-4);
+  font-size: var(--text-sm);
+  min-height: 44px;
+}
+
+.btn-lg {
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--text-base);
+  min-height: 48px;
+}
+
+.btn-xl {
+  padding: var(--space-4) var(--space-6);
+  font-size: var(--text-lg);
+  min-height: 56px;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Button States
+   ────────────────────────────────────────────────────────────────────────── */
+
+.btn-loading {
+  position: relative;
+  color: transparent;
+  pointer-events: none;
+}
+
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+.btn-loading.btn-primary::after,
+.btn-loading.btn-secondary::after,
+.btn-loading.btn-danger::after {
+  border-color: white;
+  border-right-color: transparent;
+}
+
+/* Full Width */
+.btn-full {
+  width: 100%;
+}
+
+/* Icon Only */
+.btn-icon {
+  padding: var(--space-2);
+  aspect-ratio: 1;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Legacy Support (Catalyst compatibility)
+   ────────────────────────────────────────────────────────────────────────── */
+
+.btn-zzik-coral {
+  background: var(--color-zzik-coral-500);
+  color: white;
+  border: 1px solid var(--color-zzik-coral-600);
+}
+
+.btn-zzik-coral:hover:not(:disabled) {
+  background: var(--color-zzik-coral-400);
+}
+
+.btn-electric-cyan {
+  background: var(--color-electric-cyan-500);
+  color: var(--color-deep-space-800);
+  border: 1px solid var(--color-electric-cyan-600);
+}
+
+.btn-electric-cyan:hover:not(:disabled) {
+  background: var(--color-electric-cyan-400);
+}

@@ -1,0 +1,106 @@
+{
+  "common": {
+    "appName": "ZZIK MAP",
+    "loading": "加载中...",
+    "error": "发生错误",
+    "retry": "重试",
+    "cancel": "取消",
+    "confirm": "确认",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "close": "关闭",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步",
+    "search": "搜索",
+    "filter": "筛选",
+    "sort": "排序",
+    "share": "分享",
+    "copy": "复制",
+    "download": "下载"
+  },
+  "nav": {
+    "home": "首页",
+    "journey": "旅程",
+    "vibe": "氛围",
+    "mapBox": "MAP BOX",
+    "myPage": "我的",
+    "settings": "设置"
+  },
+  "hero": {
+    "title": "一张照片",
+    "subtitle": "发现下一个目的地",
+    "tagline": "查看847位旅行者的下一站",
+    "cta": "上传照片",
+    "exploreCta": "探索"
+  },
+  "journey": {
+    "title": "旅程智能",
+    "uploadPrompt": "上传您的旅行照片",
+    "uploadHint": "支持JPEG、PNG、WebP（最大10MB）",
+    "analyzing": "分析中...",
+    "extractingLocation": "提取位置信息...",
+    "noGps": "未找到GPS信息",
+    "selectLocation": "请选择位置",
+    "recommendations": "推荐目的地",
+    "travelers": "位旅行者",
+    "wentHere": "下一站去了这里",
+    "similarity": "相似度",
+    "viewDetails": "查看详情"
+  },
+  "vibe": {
+    "title": "氛围匹配",
+    "findSimilar": "查找类似氛围的地方",
+    "vibes": {
+      "cozy": "温馨",
+      "modern": "现代",
+      "traditional": "传统",
+      "peaceful": "宁静",
+      "artistic": "艺术",
+      "vintage": "复古",
+      "minimalist": "极简",
+      "vibrant": "活力",
+      "romantic": "浪漫",
+      "adventurous": "冒险"
+    },
+    "matchScore": "匹配度",
+    "primaryVibe": "主要氛围",
+    "secondaryVibes": "次要氛围"
+  },
+  "upload": {
+    "dragDrop": "拖放照片到此处",
+    "orClick": "或点击选择",
+    "uploading": "上传中...",
+    "processing": "处理中...",
+    "success": "上传成功！",
+    "failed": "上传失败",
+    "maxSize": "最大文件大小: {size}MB",
+    "supportedFormats": "支持格式: {formats}"
+  },
+  "toast": {
+    "success": "成功",
+    "error": "错误",
+    "warning": "警告",
+    "info": "提示",
+    "photoUploaded": "照片上传成功",
+    "locationFound": "已找到位置",
+    "analysisComplete": "分析完成",
+    "copySuccess": "已复制到剪贴板"
+  },
+  "errors": {
+    "networkError": "网络错误",
+    "serverError": "服务器错误",
+    "notFound": "未找到",
+    "unauthorized": "需要登录",
+    "fileTooLarge": "文件过大",
+    "unsupportedFormat": "不支持的格式",
+    "tryAgain": "请稍后重试"
+  },
+  "footer": {
+    "copyright": "2025 ZZIK MAP. 保留所有权利。",
+    "terms": "服务条款",
+    "privacy": "隐私政策",
+    "contact": "联系我们"
+  }
+}

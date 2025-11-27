@@ -1,0 +1,106 @@
+{
+  "common": {
+    "appName": "ZZIK MAP",
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました",
+    "retry": "再試行",
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "save": "保存",
+    "delete": "削除",
+    "edit": "編集",
+    "close": "閉じる",
+    "back": "戻る",
+    "next": "次へ",
+    "previous": "前へ",
+    "search": "検索",
+    "filter": "フィルター",
+    "sort": "並べ替え",
+    "share": "共有",
+    "copy": "コピー",
+    "download": "ダウンロード"
+  },
+  "nav": {
+    "home": "ホーム",
+    "journey": "ジャーニー",
+    "vibe": "バイブ",
+    "mapBox": "MAP BOX",
+    "myPage": "マイページ",
+    "settings": "設定"
+  },
+  "hero": {
+    "title": "一枚の写真で",
+    "subtitle": "次の目的地を発見",
+    "tagline": "847人の旅行者が次に行った場所を確認",
+    "cta": "写真をアップロード",
+    "exploreCta": "探索"
+  },
+  "journey": {
+    "title": "ジャーニーインテリジェンス",
+    "uploadPrompt": "旅行写真をアップロード",
+    "uploadHint": "JPEG、PNG、WebP対応（最大10MB）",
+    "analyzing": "分析中...",
+    "extractingLocation": "位置情報を抽出中...",
+    "noGps": "GPS情報が見つかりません",
+    "selectLocation": "場所を選択してください",
+    "recommendations": "おすすめの目的地",
+    "travelers": "人の旅行者が",
+    "wentHere": "次にここへ行きました",
+    "similarity": "類似度",
+    "viewDetails": "詳細を見る"
+  },
+  "vibe": {
+    "title": "バイブマッチング",
+    "findSimilar": "この雰囲気に似た場所を探す",
+    "vibes": {
+      "cozy": "居心地の良い",
+      "modern": "モダン",
+      "traditional": "伝統的",
+      "peaceful": "穏やか",
+      "artistic": "芸術的",
+      "vintage": "ビンテージ",
+      "minimalist": "ミニマル",
+      "vibrant": "活気のある",
+      "romantic": "ロマンチック",
+      "adventurous": "冒険的"
+    },
+    "matchScore": "マッチスコア",
+    "primaryVibe": "メインの雰囲気",
+    "secondaryVibes": "サブの雰囲気"
+  },
+  "upload": {
+    "dragDrop": "ここに写真をドラッグ＆ドロップ",
+    "orClick": "またはクリックして選択",
+    "uploading": "アップロード中...",
+    "processing": "処理中...",
+    "success": "アップロード完了！",
+    "failed": "アップロード失敗",
+    "maxSize": "最大ファイルサイズ: {size}MB",
+    "supportedFormats": "対応形式: {formats}"
+  },
+  "toast": {
+    "success": "成功",
+    "error": "エラー",
+    "warning": "警告",
+    "info": "お知らせ",
+    "photoUploaded": "写真がアップロードされました",
+    "locationFound": "位置情報が見つかりました",
+    "analysisComplete": "分析が完了しました",
+    "copySuccess": "クリップボードにコピーしました"
+  },
+  "errors": {
+    "networkError": "ネットワークエラーが発生しました",
+    "serverError": "サーバーエラーが発生しました",
+    "notFound": "見つかりません",
+    "unauthorized": "認証が必要です",
+    "fileTooLarge": "ファイルが大きすぎます",
+    "unsupportedFormat": "サポートされていない形式です",
+    "tryAgain": "後でもう一度お試しください"
+  },
+  "footer": {
+    "copyright": "2025 ZZIK MAP. All rights reserved.",
+    "terms": "利用規約",
+    "privacy": "プライバシーポリシー",
+    "contact": "お問い合わせ"
+  }
+}

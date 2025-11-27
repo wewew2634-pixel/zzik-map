@@ -42,12 +42,36 @@ ZZIK: 20% commission + Vibe data accumulation
 ## Tech Stack
 
 ```yaml
-Frontend: Next.js 15, TypeScript, Tailwind CSS, shadcn/ui
+Frontend: Next.js 15, TypeScript, Tailwind CSS v4, Catalyst UI Kit
 Backend:  Supabase (PostgreSQL + pgvector), Firebase Auth, Redis
 AI:       Gemini 2.0 Flash (Vision), pgvector
 Maps:     Kakao Maps (Korea), Mapbox (International)
 i18n:     6 languages (ko, en, ja, zh-CN, zh-TW, th)
 ```
+
+---
+
+## Design System: Catalyst UI Kit
+
+ZZIK MAP uses **Tailwind Plus Catalyst UI Kit** (27 production-grade components).
+
+### Component Categories
+```
+Layout (5):     sidebar-layout, sidebar, navbar, stacked-layout, auth-layout
+Form (10):      button, input, textarea, select, checkbox, radio, switch, fieldset, combobox, listbox
+Display (7):    avatar, badge, table, description-list, text, heading, divider
+Overlay (3):    dialog, dropdown, alert
+Navigation (2): link, pagination
+```
+
+### Usage
+```tsx
+import { Button, Input, Avatar, Dialog } from '@/components/catalyst'
+```
+
+### Reference
+- **Design System V3**: `/docs/DESIGN_SYSTEM_V3.md`
+- **Frontend Agent V3**: `/.claude/agents/zzik-frontend.md`
 
 ---
 
@@ -83,10 +107,38 @@ i18n:     6 languages (ko, en, ja, zh-CN, zh-TW, th)
 
 | Agent | Location | Purpose |
 |-------|----------|---------|
+| `zzik-frontend` | .claude/agents | UI development with Catalyst Design System |
 | `zzik-journey` | .claude/agents | Journey Intelligence development |
 | `zzik-vibe` | .claude/agents | Vibe Matching development |
 | `zzik-mapbox` | .claude/agents | MAP BOX platform development |
-| `zzik-infra` | .claude/agents | Infrastructure setup |
+| `zzik-database` | .claude/agents | Supabase/pgvector management |
+| `zzik-testing` | .claude/agents | Testing (Vitest, Playwright, MSW) |
+| `zzik-ai` | .claude/agents | AI integration (Gemini API) |
+| `nano-uxui` | .claude/agents | **V3** Atomic-level QA with Auto-Fix Engine |
+| `uxui-audit-v4` | .claude/agents | **V4** 16-dimension audit framework with behavioral science |
+| `uxui-mastery-v7` | .claude/agents | **V7** Mastery framework with cognitive psychology & systems thinking |
+| `cognitive-principles-v7` | .claude/agents | **V7** Behavioral psychology & mental models for ZZIK |
+
+---
+
+## Available Skills V3 + V7
+
+| Skill | Category | Purpose |
+|-------|----------|---------|
+| `photo-processing` | Core | EXIF extraction, compression, validation |
+| `pgvector-optimization` | Core | Vector search indexing & optimization |
+| `i18n-implementation` | Core | next-intl setup & translation patterns |
+| `browser-automation` | QA | Playwright visual QA & screenshot capture |
+| `performance-optimization` | QA | Core Web Vitals & 60fps optimization |
+| `accessibility-audit` | QA | WCAG 2.1 AA/AAA compliance |
+| `design-tokens` | **V3** | 4-layer token architecture & generation |
+| `animation-system` | **V3** | 60fps motion design & performance |
+| `responsive-design` | **V3** | Mobile-first & fluid typography |
+| `zzik-ui-patterns` | **V4** | ZZIK-specific UI pattern library (7 core patterns) |
+| `microinteractions-v4` | **V4** | 10 core microinteraction patterns with timings |
+| `motion-economics-v7` | **V7** | Animation ROI, performance efficiency & psychology |
+| `data-driven-design-v7` | **V7** | Metrics, analytics & evidence-based decisions |
+| `state-machines-v7` | **V7** | Complete user flow state transitions |
 
 ---
 
@@ -97,6 +149,10 @@ i18n:     6 languages (ko, en, ja, zh-CN, zh-TW, th)
 | `/zzik-dev` | Start development environment |
 | `/zzik-status` | Check project status |
 | `/zzik-build` | Production build |
+| `/zzik-test` | Run test suite (unit, E2E, coverage) |
+| `/zzik-db` | Database operations (migrations, seeds, backup) |
+| `/zzik-deploy` | Deployment (staging, production, rollback) |
+| `/zzik-i18n` | Translation management (6 languages) |
 
 ---
 
@@ -154,6 +210,7 @@ pnpm dev
 
 - **Business Plan**: `/docs/BUSINESS_PLAN_V5_FINAL.md`
 - **IR Deck**: `/docs/ZZIK_IR_DECK_V5_FINAL.md`
+- **Design System V3**: `/docs/DESIGN_SYSTEM_V3.md`
 
 ---
 
@@ -167,4 +224,7 @@ pnpm dev
 
 ---
 
-*Version: v5.0 | Updated: 2025-11-26*
+*Version: v5.3 | Updated: 2025-11-27*
+*V7 Complete: UX/UI Mastery Framework with behavioral psychology, cognitive principles, motion economics, data-driven design, and state machines*
+*Agents: +3 V7 agents (uxui-mastery-v7, uxui-audit-v4, cognitive-principles-v7)*
+*Skills: +5 V7 skills (motion-economics-v7, data-driven-design-v7, state-machines-v7, zzik-ui-patterns, microinteractions-v4)*

@@ -1,0 +1,106 @@
+{
+  "common": {
+    "appName": "ZZIK MAP",
+    "loading": "載入中...",
+    "error": "發生錯誤",
+    "retry": "重試",
+    "cancel": "取消",
+    "confirm": "確認",
+    "save": "儲存",
+    "delete": "刪除",
+    "edit": "編輯",
+    "close": "關閉",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步",
+    "search": "搜尋",
+    "filter": "篩選",
+    "sort": "排序",
+    "share": "分享",
+    "copy": "複製",
+    "download": "下載"
+  },
+  "nav": {
+    "home": "首頁",
+    "journey": "旅程",
+    "vibe": "氛圍",
+    "mapBox": "MAP BOX",
+    "myPage": "我的",
+    "settings": "設定"
+  },
+  "hero": {
+    "title": "一張照片",
+    "subtitle": "發現下一個目的地",
+    "tagline": "查看847位旅行者的下一站",
+    "cta": "上傳照片",
+    "exploreCta": "探索"
+  },
+  "journey": {
+    "title": "旅程智慧",
+    "uploadPrompt": "上傳您的旅行照片",
+    "uploadHint": "支援JPEG、PNG、WebP（最大10MB）",
+    "analyzing": "分析中...",
+    "extractingLocation": "擷取位置資訊...",
+    "noGps": "未找到GPS資訊",
+    "selectLocation": "請選擇位置",
+    "recommendations": "推薦目的地",
+    "travelers": "位旅行者",
+    "wentHere": "下一站去了這裡",
+    "similarity": "相似度",
+    "viewDetails": "查看詳情"
+  },
+  "vibe": {
+    "title": "氛圍配對",
+    "findSimilar": "尋找類似氛圍的地方",
+    "vibes": {
+      "cozy": "溫馨",
+      "modern": "現代",
+      "traditional": "傳統",
+      "peaceful": "寧靜",
+      "artistic": "藝術",
+      "vintage": "復古",
+      "minimalist": "極簡",
+      "vibrant": "活力",
+      "romantic": "浪漫",
+      "adventurous": "冒險"
+    },
+    "matchScore": "配對度",
+    "primaryVibe": "主要氛圍",
+    "secondaryVibes": "次要氛圍"
+  },
+  "upload": {
+    "dragDrop": "拖放照片到此處",
+    "orClick": "或點擊選擇",
+    "uploading": "上傳中...",
+    "processing": "處理中...",
+    "success": "上傳成功！",
+    "failed": "上傳失敗",
+    "maxSize": "最大檔案大小: {size}MB",
+    "supportedFormats": "支援格式: {formats}"
+  },
+  "toast": {
+    "success": "成功",
+    "error": "錯誤",
+    "warning": "警告",
+    "info": "提示",
+    "photoUploaded": "照片上傳成功",
+    "locationFound": "已找到位置",
+    "analysisComplete": "分析完成",
+    "copySuccess": "已複製到剪貼簿"
+  },
+  "errors": {
+    "networkError": "網路錯誤",
+    "serverError": "伺服器錯誤",
+    "notFound": "找不到",
+    "unauthorized": "需要登入",
+    "fileTooLarge": "檔案過大",
+    "unsupportedFormat": "不支援的格式",
+    "tryAgain": "請稍後重試"
+  },
+  "footer": {
+    "copyright": "2025 ZZIK MAP. 保留所有權利。",
+    "terms": "服務條款",
+    "privacy": "隱私政策",
+    "contact": "聯絡我們"
+  }
+}
