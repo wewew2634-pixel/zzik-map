@@ -38,7 +38,7 @@ async function handlePost(request: NextRequest): Promise<NextResponse> {
   let body: unknown;
   try {
     body = await request.json();
-  } catch (error) {
+  } catch {
     throw Errors.validation('Invalid JSON body');
   }
 

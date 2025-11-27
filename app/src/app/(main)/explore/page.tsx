@@ -5,7 +5,7 @@
  * Design: Neo-Korean Modernism - Grid-based discovery
  */
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useLocations, useFilteredLocations } from '@/hooks/useLocations';

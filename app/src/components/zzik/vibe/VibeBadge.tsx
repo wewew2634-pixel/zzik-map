@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef } from 'react';
+import { forwardRef, memo } from 'react';
 import { ZzikBadge, type VibeCategory, type ZzikBadgeProps } from '../core/ZzikBadge';
 
 export interface VibeBadgeProps extends Omit<ZzikBadgeProps, 'color' | 'vibe'> {
@@ -78,3 +78,6 @@ export const VibeBadge = forwardRef<HTMLSpanElement, VibeBadgeProps>(
 );
 
 VibeBadge.displayName = 'VibeBadge';
+
+// Memoized version for performance in lists
+export const MemoizedVibeBadge = memo(VibeBadge);

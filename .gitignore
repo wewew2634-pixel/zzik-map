@@ -51,3 +51,15 @@ supabase/.temp/
 .claude/todos/
 .claude/plans/
 .claude/projects/
+
+# Wrangler (Cloudflare)
+.wrangler/
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+*.bak
+*~
+*.orig

@@ -176,7 +176,7 @@ function FeedbackDisplay({ feedback }: FeedbackDisplayProps) {
       exit={{ opacity: 0, y: position === 'top' ? -20 : 20 }}
       transition={{
         duration: MOTION_TOKENS.duration.normal / 1000,
-        ease: MOTION_TOKENS.easing.easeOut as any,
+        ease: MOTION_TOKENS.easing.easeOut,
       }}
       className={`fixed left-4 right-4 ${positionClasses[position]} z-50 flex items-start gap-3 p-4 rounded-lg border ${colors.bg} ${colors.border} ${colors.text} max-w-md mx-auto`}
     >

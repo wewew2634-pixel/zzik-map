@@ -253,6 +253,17 @@ export type Database = {
           similarity: number
         }[]
       }
+      // Phase 1.4: 원자적 여정 패턴 upsert 함수
+      upsert_journey_pattern: {
+        Args: { p_from_location_id: string; p_to_location_id: string }
+        Returns: {
+          id: string
+          from_location_id: string
+          to_location_id: string
+          journey_count: number
+          action: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

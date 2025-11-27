@@ -67,7 +67,7 @@ capture_screenshots() {
     info "Capturing screenshots for: /, /explore, /journey"
 
     # Node 스크립트로 스크린샷 캡처
-    npx tsx << 'EOJS' 2>/dev/null || true
+    npx tsx << 'EOJS' 2>&1 || true
 import { chromium } from 'playwright';
 import { mkdir } from 'fs/promises';
 import { join } from 'path';
@@ -81,12 +81,15 @@ async function captureAll() {
 
   try {
     await mkdir(dir, { recursive: true });
+    console.log(`📁 Screenshots directory: ${dir}`);
   } catch (e) {
-    // ignore
+    console.error(`Failed to create directory: ${e.message}`);
+    return;
   }
 
   let browser;
   try {
+    console.log('🚀 Launching Chromium browser...');
     browser = await chromium.launch({ headless: true });
     const context = await browser.createContext({
       viewport: { width: 1920, height: 1080 }
@@ -94,21 +97,28 @@ async function captureAll() {
     const page = await context.newPage();
 
     const pages = ['/', '/explore', '/journey'];
+    let successCount = 0;
 
     for (const pagePath of pages) {
       try {
-        await page.goto(BASE_URL + pagePath, { waitUntil: 'networkidle', timeout: 30000 });
+        console.log(`📍 Navigating to ${pagePath}...`);
+        await page.goto(BASE_URL + pagePath, { waitUntil: 'domcontentloaded', timeout: 15000 });
         await page.waitForTimeout(500);
 
-        const filename = join(dir, `${pagePath.replace(/\//g, '-') || 'home'}-${timestamp}.png`);
+        const pageName = pagePath.replace(/\//g, '-') || 'home';
+        const filename = join(dir, `${pageName}-${timestamp}.png`);
         await page.screenshot({ path: filename, fullPage: false });
-        console.log(`📸 Screenshot: ${filename}`);
+        console.log(`✓ Screenshot saved: ${filename}`);
+        successCount++;
       } catch (e) {
-        console.error(`Failed to capture ${pagePath}: ${e.message}`);
+        console.error(`✗ Failed to capture ${pagePath}: ${e.message}`);
       }
     }
 
+    console.log(`✓ Screenshot capture completed: ${successCount}/3 pages`);
     await context.close();
+  } catch (e) {
+    console.error(`Browser error: ${e.message}`);
   } finally {
     if (browser) await browser.close();
   }
@@ -122,10 +132,40 @@ EOJS
 }
 
 ################################################################################
-# 함수: URL 열기 (브라우저)
+# 함수: Dev 서버 헬스 체크
+################################################################################
+check_dev_server() {
+    info "Checking dev server at $BASE_URL..."
+
+    local max_attempts=5
+    local attempt=1
+
+    while [ $attempt -le $max_attempts ]; do
+        if curl -s "$BASE_URL" > /dev/null 2>&1; then
+            success "Dev server is responsive"
+            return 0
+        fi
+
+        warning "Dev server not ready (attempt $attempt/$max_attempts), waiting..."
+        sleep 2
+        attempt=$((attempt + 1))
+    done
+
+    error "Dev server failed to respond after $max_attempts attempts"
+    return 1
+}
+
+################################################################################
+# 함수: URL 열기 (Playwright 브라우저)
 ################################################################################
 open_urls() {
-    log "${PURPLE}=== Phase 2: Opening URLs ===${NC}"
+    log "${PURPLE}=== Phase 2: Opening URLs in Browser ===${NC}"
+
+    # Dev 서버 헬스 체크
+    if ! check_dev_server; then
+        error "Skipping browser open - dev server unavailable"
+        return 1
+    fi
 
     local urls=(
         "$BASE_URL"
@@ -133,23 +173,55 @@ open_urls() {
         "$BASE_URL/journey"
     )
 
-    for url in "${urls[@]}"; do
-        info "Opening: $url"
+    # Playwright를 이용해 브라우저에서 URL 열기
+    npx tsx << 'EOJS' 2>/dev/null || true
+import { chromium } from 'playwright';
 
-        # OS별로 다른 명령어 사용
-        if command -v open &> /dev/null; then
-            # macOS
-            open "$url" 2>/dev/null &
-        elif command -v xdg-open &> /dev/null; then
-            # Linux
-            xdg-open "$url" 2>/dev/null &
-        elif command -v start &> /dev/null; then
-            # Windows
-            start "$url" 2>/dev/null &
-        fi
-    done
+const BASE_URL = 'http://localhost:3000';
+const urls = ['/', '/explore', '/journey'];
 
-    success "URLs opened in default browser"
+async function openUrls() {
+  let browser;
+  try {
+    browser = await chromium.launch({
+      headless: false,
+      args: ['--no-sandbox']
+    });
+
+    const context = await browser.createContext({
+      viewport: { width: 1920, height: 1080 }
+    });
+
+    const page = await context.newPage();
+
+    for (const pagePath of urls) {
+      const url = BASE_URL + pagePath;
+      try {
+        console.log(`🌐 Navigating to: ${url}`);
+        await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 });
+        console.log(`✓ Loaded: ${url}`);
+
+        // Keep page open for 5 seconds so user can see it
+        await page.waitForTimeout(5000);
+      } catch (e) {
+        console.error(`✗ Failed to open ${url}: ${e.message}`);
+      }
+    }
+
+    // Keep browser open briefly for user review
+    await page.waitForTimeout(2000);
+    await context.close();
+  } catch (e) {
+    console.error(`✗ Browser error: ${e.message}`);
+  } finally {
+    if (browser) await browser.close();
+  }
+}
+
+openUrls().catch(console.error);
+EOJS
+
+    success "URLs opened and displayed in browser"
 }
 
 ################################################################################
@@ -347,16 +419,27 @@ main() {
         log "${PURPLE}[ITERATION #$ITERATION]${NC} Starting continuous analysis..."
         echo ""
 
+        # Pre-flight check: Dev 서버 헬스 체크
+        if ! check_dev_server; then
+            error "Dev server is unavailable. Waiting before retry..."
+            sleep 5
+            continue
+        fi
+
         # Phase 1: 스크린샷 캡처
-        capture_screenshots
+        if ! capture_screenshots; then
+            warning "Screenshot capture failed, continuing..."
+        fi
         echo ""
 
         # Phase 2: URL 열기
-        open_urls
+        if ! open_urls; then
+            warning "Browser open failed, continuing..."
+        fi
         echo ""
 
         # Phase 3: UX/UI 분석 실행
-        run_uxui_analysis
+        run_uxui_analysis || warning "UX/UI analysis encountered errors"
         echo ""
 
         # Phase 4: 분석 결과 저장 및 개선 제안

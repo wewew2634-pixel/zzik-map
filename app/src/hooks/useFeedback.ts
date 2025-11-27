@@ -8,7 +8,7 @@ import type {
   MotionIntensity,
   MicrointeractionConfig,
 } from '@/lib/microinteractions';
-import { MICROINTERACTION_PRESETS, getMotionConfig } from '@/lib/microinteractions';
+import { getMotionConfig } from '@/lib/microinteractions';
 
 /**
  * Unified Feedback Hook (Phase 6)

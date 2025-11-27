@@ -16,16 +16,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useUploadStateMachine } from '@/hooks/useUploadStateMachine';
 import type { UseUploadStateMachineReturn } from '@/hooks/useUploadStateMachine';
 import { PageTransition } from '@/components/microinteractions/PageTransition';
-import { LoadingShimmer } from '@/components/microinteractions/LoadingShimmer';
 import { SuccessCelebration } from '@/components/microinteractions/SuccessCelebration';
-import { FormValidationInput } from '@/components/microinteractions/FormValidation';
 import { ButtonFeedback } from '@/components/microinteractions/ButtonFeedback';
-import { useTranslation } from '@/hooks/useTranslation';
 import { ReactNode } from 'react';
 
 interface UploadProgressFlowProps {
-  onSuccess: (result: any) => void;
-  onError?: (error: any) => void;
+  onSuccess: (result: unknown) => void;
+  onError?: (error: unknown) => void;
   children?: ReactNode;
 }
 
@@ -70,7 +67,6 @@ function StateLabel({
   currentState: string;
   errorMessage: string | null;
 }) {
-  const { t } = useTranslation();
 
   const labels = {
     idle: 'Ready to upload',
@@ -110,7 +106,6 @@ function ErrorRecovery({
 }: {
   upload: UseUploadStateMachineReturn;
 }) {
-  const { t } = useTranslation();
 
   return (
     <PageTransition variant="slideUp">
@@ -153,11 +148,10 @@ function ErrorRecovery({
  */
 export function UploadProgressFlow({
   onSuccess,
-  onError,
+  onError: _onError,
   children,
 }: UploadProgressFlowProps) {
   const upload = useUploadStateMachine();
-  const { t } = useTranslation();
 
   return (
     <div className="space-y-6">

@@ -74,7 +74,7 @@ export function PageTransition({
         exit={!reduceMotion ? selectedVariant.exit : undefined}
         transition={!reduceMotion ? {
           duration,
-          ease: (variant.includes('slide') ? [0, 0, 0.2, 1] : [0.3, 0, 0.3, 1]) as any,
+          ease: variant.includes('slide') ? [0, 0, 0.2, 1] : [0.3, 0, 0.3, 1],
         } : undefined}
         className={className}
       >
@@ -97,8 +97,6 @@ export function LayoutTransition({
   children,
   variant = 'fade',
 }: LayoutTransitionProps) {
-  const easeInOut = [0.3, 0, 0.3, 1];
-
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -108,7 +106,7 @@ export function LayoutTransition({
         exit={{ opacity: 0 }}
         transition={{
           duration: 0.3,
-          ease: easeInOut as any,
+          ease: [0.3, 0, 0.3, 1],
         }}
         className="min-h-screen"
       >

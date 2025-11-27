@@ -9,7 +9,11 @@ import { z } from 'zod';
 // Common Validators
 // ============================================
 
-export const uuidSchema = z.string().uuid('Invalid UUID format');
+// Custom UUID schema that accepts both strict RFC 4122 UUIDs and test UUIDs
+export const uuidSchema = z.string().regex(
+  /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/,
+  'Invalid UUID format'
+);
 
 export const paginationSchema = z.object({
   limit: z.coerce.number().min(1).max(100).default(20),

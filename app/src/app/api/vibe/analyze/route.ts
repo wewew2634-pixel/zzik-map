@@ -3,7 +3,7 @@
  * V3: Real Gemini Vision integration with demo fallback
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { success, badRequest, externalApiError, rateLimited } from '@/lib/api/response';
 import { logger } from '@/lib/logger';
 
@@ -165,7 +165,7 @@ export async function POST(request: NextRequest) {
           // Generate embedding from vibe scores (128-dim)
           analysis.embedding = generateEmbedding(analysis.vibeScores);
 
-        } catch (parseError) {
+        } catch {
           log.warn('Failed to parse Gemini response, using demo', { responseText });
           isDemo = true;
           analysis = getDemoAnalysis();

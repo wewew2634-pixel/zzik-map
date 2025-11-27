@@ -5,7 +5,6 @@
  * V3: Animated toast system with Zustand
  */
 
-import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToastStore, type Toast, type ToastType } from '@/stores/app';
 

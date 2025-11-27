@@ -13,7 +13,7 @@
  * 8. Race condition fix
  */
 
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect } from 'vitest';
 
 const API_BASE = process.env.API_BASE || 'http://localhost:3000';
 const TEST_USER_ID = 'test-user-' + Math.random().toString(36).substr(2, 9);
@@ -197,7 +197,7 @@ describe('Analytics API - Security Tests', () => {
 
   describe('P0 #6: Rate Limiting', () => {
     it('should enforce rate limits', async () => {
-      const testId = `ratelimit-test-${Date.now()}`;
+      const _testId = `ratelimit-test-${Date.now()}`;
       const requests = [];
 
       // Make rapid requests (should exceed limit)

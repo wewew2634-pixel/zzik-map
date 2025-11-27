@@ -42,18 +42,6 @@ interface ABTestConfig {
   expectedLift: number; // % improvement we hope for
 }
 
-interface TestResult {
-  testId: string;
-  variant: TestVariant;
-  metricResults: Record<MetricKey, {
-    value: number;
-    confidence: number; // 0-1 (95% = 0.95)
-    pValue: number; // statistical significance
-  }>;
-  winner?: TestVariant;
-  confidenceLevel: number; // overall confidence in results
-}
-
 /**
  * Active A/B Tests Configuration
  * These are the 3 tests we're running during Phase 5
@@ -113,7 +101,7 @@ const ACTIVE_TESTS: Record<string, ABTestConfig> = {
  * Assign user to test variant (consistent, deterministic)
  * Uses hash to ensure same user always gets same variant
  */
-function assignVariant(userId: string, testId: string): TestVariant {
+function assignVariant(userId: string, _testId: string): TestVariant {
   // Simple hash: sum of char codes
   const hash = userId
     .split('')

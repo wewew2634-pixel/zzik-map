@@ -132,50 +132,67 @@ export async function POST(request: NextRequest) {
       return notFound('One or both locations', ROUTE);
     }
 
-    // Upsert journey pattern (increment count if exists)
-    const { data: existing } = await supabase
-      .from('journey_patterns')
-      .select('id, journey_count')
-      .eq('from_location_id', fromLocationId)
-      .eq('to_location_id', toLocationId)
-      .single();
+    // Phase 1.4: 원자적 upsert로 경합 조건 방지
+    // RPC 함수로 원자적 증가 연산 수행 (동시 요청 시에도 안전)
+    const { data, error } = await supabase.rpc('upsert_journey_pattern', {
+      p_from_location_id: fromLocationId,
+      p_to_location_id: toLocationId
+    });
 
-    if (existing) {
-      // Increment existing pattern
-      const { data, error } = await supabase
+    if (error) {
+      // RPC가 없으면 fallback: 기존 패턴 조회 후 처리
+      log.warn('RPC unavailable, using SELECT-then-UPDATE fallback', { error: error.message });
+
+      // 기존 패턴 확인
+      const { data: existing } = await supabase
         .from('journey_patterns')
-        .update({ journey_count: (existing.journey_count || 0) + 1 })
-        .eq('id', existing.id)
-        .select()
+        .select('id, journey_count')
+        .eq('from_location_id', fromLocationId)
+        .eq('to_location_id', toLocationId)
         .single();
 
-      if (error) {
-        log.error('Pattern update failed', { patternId: existing.id }, error);
-        return databaseError(error, ROUTE);
+      if (existing) {
+        // 기존 패턴 업데이트 (Supabase에서 raw SQL 사용 불가하므로 read-then-write)
+        const { data: updateData, error: updateError } = await supabase
+          .from('journey_patterns')
+          .update({ journey_count: (existing.journey_count || 0) + 1 })
+          .eq('id', existing.id)
+          .select()
+          .single();
+
+        if (updateError) {
+          log.error('Pattern update failed', { patternId: existing.id }, updateError);
+          return databaseError(updateError, ROUTE);
+        }
+
+        timer.end({ action: 'fallback_increment', patternId: updateData?.id });
+        return success(updateData);
+      } else {
+        // 새 패턴 생성
+        const { data: insertData, error: insertError } = await supabase
+          .from('journey_patterns')
+          .insert({
+            from_location_id: fromLocationId,
+            to_location_id: toLocationId,
+            journey_count: 1
+          })
+          .select()
+          .single();
+
+        if (insertError) {
+          log.error('Pattern insert failed', {}, insertError);
+          return databaseError(insertError, ROUTE);
+        }
+
+        timer.end({ action: 'fallback_create', patternId: insertData?.id });
+        return created(insertData);
       }
-
-      timer.end({ action: 'increment', patternId: existing.id });
-      return success(data);
-    } else {
-      // Create new pattern
-      const { data, error } = await supabase
-        .from('journey_patterns')
-        .insert({
-          from_location_id: fromLocationId,
-          to_location_id: toLocationId,
-          journey_count: 1
-        })
-        .select()
-        .single();
-
-      if (error) {
-        log.error('Pattern insert failed', {}, error);
-        return databaseError(error, ROUTE);
-      }
-
-      timer.end({ action: 'create', patternId: data.id });
-      return created(data);
     }
+
+    // RPC 성공 시
+    const result = Array.isArray(data) ? data[0] : data;
+    timer.end({ action: 'atomic_upsert', result });
+    return created(result)
   } catch (err) {
     log.error('Unexpected error', {}, err instanceof Error ? err : undefined);
     return databaseError(err instanceof Error ? err : undefined, ROUTE);

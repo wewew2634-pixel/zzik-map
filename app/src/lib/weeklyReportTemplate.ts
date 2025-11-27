@@ -5,7 +5,7 @@
  * Tracks: KPI trends, cohort performance, error analysis, test results
  */
 
-import type { UploadAnalyticsMetrics, UploadKPIs } from '@/hooks/useUploadAnalytics';
+import type { UploadKPIs } from '@/hooks/useUploadAnalytics';
 
 export interface WeeklyReportData {
   week: {

@@ -40,15 +40,54 @@ export const PhotoUpload = forwardRef<HTMLDivElement, PhotoUploadProps>(
       setState('idle');
     }, []);
 
+    // Phase 1.3: processFiles를 useCallback 내부로 인라인화하여 의존성 문제 해결
     const handleDrop = useCallback(
       async (e: React.DragEvent) => {
         e.preventDefault();
         if (disabled) return;
 
         const files = Array.from(e.dataTransfer.files);
-        await processFiles(files);
+
+        // 인라인 처리 (의존성 문제 해결)
+        const validFiles = files.filter((file) =>
+          accept.split(',').some((type) => file.type.match(type.trim()))
+        );
+
+        if (validFiles.length === 0) {
+          setState('error');
+          onError?.(new Error('Invalid file type'));
+          return;
+        }
+
+        const oversizedFiles = validFiles.filter((file) => file.size > maxSize);
+        if (oversizedFiles.length > 0) {
+          setState('error');
+          onError?.(new Error(`File too large. Max size: ${maxSize / 1024 / 1024}MB`));
+          return;
+        }
+
+        const filesToUpload = multiple ? validFiles : [validFiles[0]];
+
+        if (filesToUpload[0]) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            setPreview(event.target?.result as string);
+          };
+          reader.readAsDataURL(filesToUpload[0]);
+        }
+
+        if (onUpload) {
+          setState('uploading');
+          try {
+            await onUpload(filesToUpload);
+            setState('success');
+          } catch (error) {
+            setState('error');
+            onError?.(error instanceof Error ? error : new Error('Upload failed'));
+          }
+        }
       },
-      [disabled]
+      [disabled, accept, maxSize, multiple, onUpload, onError]
     );
 
     const handleFileSelect = useCallback(
@@ -56,45 +95,48 @@ export const PhotoUpload = forwardRef<HTMLDivElement, PhotoUploadProps>(
         if (disabled || !e.target.files) return;
 
         const files = Array.from(e.target.files);
-        await processFiles(files);
+
+        // 인라인 처리
+        const validFiles = files.filter((file) =>
+          accept.split(',').some((type) => file.type.match(type.trim()))
+        );
+
+        if (validFiles.length === 0) {
+          setState('error');
+          onError?.(new Error('Invalid file type'));
+          return;
+        }
+
+        const oversizedFiles = validFiles.filter((file) => file.size > maxSize);
+        if (oversizedFiles.length > 0) {
+          setState('error');
+          onError?.(new Error(`File too large. Max size: ${maxSize / 1024 / 1024}MB`));
+          return;
+        }
+
+        const filesToUpload = multiple ? validFiles : [validFiles[0]];
+
+        if (filesToUpload[0]) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            setPreview(event.target?.result as string);
+          };
+          reader.readAsDataURL(filesToUpload[0]);
+        }
+
+        if (onUpload) {
+          setState('uploading');
+          try {
+            await onUpload(filesToUpload);
+            setState('success');
+          } catch (error) {
+            setState('error');
+            onError?.(error instanceof Error ? error : new Error('Upload failed'));
+          }
+        }
       },
-      [disabled]
+      [disabled, accept, maxSize, multiple, onUpload, onError]
     );
-
-    const processFiles = async (files: File[]) => {
-      // Validate file types
-      const validFiles = files.filter((file) =>
-        accept.split(',').some((type) => file.type.match(type.trim()))
-      );
-
-      if (validFiles.length === 0) {
-        setState('error');
-        onError?.(new Error('Invalid file type'));
-        return;
-      }
-
-      // Validate file size
-      const oversizedFiles = validFiles.filter((file) => file.size > maxSize);
-      if (oversizedFiles.length > 0) {
-        setState('error');
-        onError?.(new Error(`File size exceeds ${maxSize / 1024 / 1024}MB`));
-        return;
-      }
-
-      // Show preview for first image
-      const reader = new FileReader();
-      reader.onload = (e) => setPreview(e.target?.result as string);
-      reader.readAsDataURL(validFiles[0]);
-
-      try {
-        setState('uploading');
-        await onUpload?.(multiple ? validFiles : [validFiles[0]]);
-        setState('success');
-      } catch (error) {
-        setState('error');
-        onError?.(error as Error);
-      }
-    };
 
     const stateClasses = {
       idle: '',

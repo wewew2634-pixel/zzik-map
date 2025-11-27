@@ -42,7 +42,9 @@
     "uxui:full-analysis": "pnpm type-check && pnpm lint && pnpm uxui:analyze && pnpm test",
     "uxui:monitor": "bash ../.claude/scripts/continuous-uxui-monitor.sh",
     "uxui:monitor:quick": "bash ../.claude/scripts/continuous-uxui-monitor.sh --interval 15 --max-iterations 10",
-    "uxui:monitor:auto": "bash ../.claude/scripts/continuous-uxui-monitor.sh --interval 30"
+    "uxui:monitor:auto": "bash ../.claude/scripts/continuous-uxui-monitor.sh --interval 30",
+    "browser:mcp:test": "bash ../.claude/scripts/browser-mcp-full-test.sh",
+    "browser:mcp:full": "pnpm type-check && pnpm lint && pnpm browser:mcp:test"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
@@ -72,6 +74,7 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
     "@playwright/test": "^1.57.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",

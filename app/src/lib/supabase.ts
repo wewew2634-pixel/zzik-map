@@ -49,7 +49,7 @@ function validateEnvVars(): {
   // Validate URL format
   try {
     new URL(supabaseUrl!);
-  } catch (error) {
+  } catch {
     const errorMessage = `Invalid NEXT_PUBLIC_SUPABASE_URL format: ${supabaseUrl}`;
     logger.error('Supabase URL validation failed', { url: supabaseUrl });
     throw new Error(errorMessage);

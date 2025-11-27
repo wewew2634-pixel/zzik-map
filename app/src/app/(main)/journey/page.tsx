@@ -6,7 +6,7 @@
  * i18n: Full internationalization support
  */
 
-import { useState, useCallback, useMemo, memo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SmartPhotoUpload, type UploadedPhoto } from '@/components/zzik/journey/SmartPhotoUpload';
 import { useLocations, useNearestLocation } from '@/hooks/useLocations';

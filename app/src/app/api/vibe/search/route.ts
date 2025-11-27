@@ -5,7 +5,7 @@
 
 import { NextRequest } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/server';
-import { success, badRequest, databaseError } from '@/lib/api/response';
+import { success, badRequest } from '@/lib/api/response';
 import { logger } from '@/lib/logger';
 import { z } from 'zod';
 
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
       return badRequest(parseResult.error.message, ROUTE);
     }
 
-    const { embedding, limit, minScore } = parseResult.data;
+    const { embedding: _embedding, limit, minScore: _minScore } = parseResult.data;
 
     const supabase = createServiceClient();
 
@@ -56,6 +56,7 @@ export async function POST(request: NextRequest) {
     if (error) {
       log.error('Database error', {}, error);
       // Fallback to demo data on any DB error
+      const _databaseError = error;
       const demoMatches = getDemoMatches(limit);
       timer.end({ demo: true, count: demoMatches.length });
       return success(demoMatches, { demo: true });

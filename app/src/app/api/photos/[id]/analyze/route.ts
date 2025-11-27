@@ -200,7 +200,7 @@ export async function POST(
 
             log.info('Gemini analysis complete', { photoId: id, primaryVibe: vibeAnalysis.primaryVibe });
 
-          } catch (parseError) {
+          } catch {
             log.warn('Failed to parse Gemini response', { photoId: id, responseText });
             isDemo = true;
             vibeAnalysis = getDemoAnalysis();

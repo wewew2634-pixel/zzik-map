@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 
 /**
@@ -51,7 +51,7 @@ export function CoreWebVitalsDashboard({
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
 
   // Fetch metrics from API
-  const fetchMetrics = async () => {
+  const fetchMetrics = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`/api/analytics/ux-metrics?period=${period}`);
@@ -117,12 +117,13 @@ export function CoreWebVitalsDashboard({
         setMetrics(transformed);
         setLastUpdated(new Date());
       }
-    } catch (error) {
-      console.error('Failed to fetch Core Web Vitals:', error);
+    } catch {
+      // Silently fail - metrics dashboard is non-critical
+      // In production, this would log to external monitoring
     } finally {
       setLoading(false);
     }
-  };
+  }, [period]);
 
   // Initial fetch and auto-refresh
   useEffect(() => {
@@ -132,7 +133,7 @@ export function CoreWebVitalsDashboard({
       const interval = setInterval(fetchMetrics, refreshInterval);
       return () => clearInterval(interval);
     }
-  }, [period, autoRefresh, refreshInterval]);
+  }, [autoRefresh, refreshInterval, fetchMetrics]);
 
   if (loading && metrics.length === 0) {
     return (

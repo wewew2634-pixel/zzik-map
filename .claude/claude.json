@@ -1,18 +1,35 @@
 {
-  "name": "ZZIK MAP UX/UI Analysis",
+  "name": "ZZIK MAP",
   "version": "7.0",
-  "description": "ZZIK MAP V7 - UX/UI Mastery Framework with Full MCP Activation",
+  "description": "ZZIK MAP V7 - AI-Powered K-Travel Discovery Platform with Full MCP Activation",
 
   "mcpServers": {
     "browser": {
       "command": "npx",
-      "args": ["@anthropic/mcp-server-browser"],
+      "args": ["-y", "@browser-mcp/server", "--port", "3001"],
       "enabled": true,
-      "priority": "high"
+      "priority": "high",
+      "env": {
+        "HEADLESS": "false",
+        "WINDOW_WIDTH": "1920",
+        "WINDOW_HEIGHT": "1080",
+        "DEBUG": "true"
+      },
+      "alwaysAllow": [
+        "goto",
+        "take_screenshot",
+        "click",
+        "type",
+        "extract_page_content",
+        "fill_form",
+        "press_key",
+        "hover",
+        "scroll"
+      ]
     },
     "filesystem": {
       "command": "npx",
-      "args": ["@anthropic/mcp-server-filesystem"],
+      "args": ["-y", "@anthropic/mcp-server-filesystem", "/home/ubuntu/zzik-map"],
       "enabled": true,
       "priority": "high"
     },
@@ -27,6 +44,25 @@
       "args": [],
       "enabled": true,
       "priority": "medium"
+    }
+  },
+
+  "capabilities": {
+    "browser": {
+      "features": [
+        "page_navigation",
+        "screenshot_capture",
+        "form_interaction",
+        "content_extraction",
+        "dom_manipulation",
+        "network_monitoring",
+        "console_logging"
+      ],
+      "ports": {
+        "dev_server": 3000,
+        "cloudflare_pages": 8787,
+        "mcp_server": 3001
+      }
     }
   },
 
@@ -74,6 +110,8 @@
   "agents": {
     "uxuiMastery": {
       "enabled": true,
+      "version": "V7",
+      "file": "agents/uxui-mastery-v7.md",
       "capabilities": [
         "visual-analysis",
         "interaction-design",
@@ -84,37 +122,130 @@
         "cognitive-principles"
       ]
     },
-    "componentAnalysis": {
+    "cognitiveprinciples": {
       "enabled": true,
+      "version": "V7",
+      "file": "agents/cognitive-principles-v7.md",
       "capabilities": [
-        "component-inspection",
-        "type-checking",
-        "style-validation",
-        "accessibility-checking",
-        "performance-profiling"
+        "behavioral-psychology",
+        "decision-frameworks",
+        "mental-models",
+        "habit-formation"
       ]
     },
-    "performanceMonitoring": {
+    "uxuiAudit": {
       "enabled": true,
+      "version": "V4",
+      "file": "agents/uxui-audit-v4.md",
       "capabilities": [
-        "core-web-vitals",
-        "bundle-analysis",
-        "render-performance",
-        "memory-tracking",
-        "network-analysis"
+        "16-dimension-audit",
+        "pattern-recognition",
+        "systematic-analysis"
+      ]
+    },
+    "frontend": {
+      "enabled": true,
+      "version": "V3",
+      "file": "agents/zzik-frontend.md",
+      "capabilities": [
+        "catalyst-ui",
+        "component-development",
+        "tailwind-styling"
+      ]
+    },
+    "journey": {
+      "enabled": true,
+      "version": "V2",
+      "file": "agents/zzik-journey.md",
+      "capabilities": [
+        "journey-intelligence",
+        "recommendation-engine",
+        "pattern-analysis"
+      ]
+    },
+    "vibe": {
+      "enabled": true,
+      "version": "V2",
+      "file": "agents/zzik-vibe.md",
+      "capabilities": [
+        "vibe-matching",
+        "embedding-generation",
+        "similarity-search"
+      ]
+    },
+    "mapbox": {
+      "enabled": true,
+      "version": "V2",
+      "file": "agents/zzik-mapbox.md",
+      "capabilities": [
+        "marketplace-platform",
+        "partner-management",
+        "creator-tools"
+      ]
+    },
+    "database": {
+      "enabled": true,
+      "version": "Core",
+      "file": "agents/zzik-database.md",
+      "capabilities": [
+        "supabase-management",
+        "pgvector-optimization",
+        "migration-handling"
+      ]
+    },
+    "ai": {
+      "enabled": true,
+      "version": "Core",
+      "file": "agents/zzik-ai.md",
+      "capabilities": [
+        "gemini-integration",
+        "vision-api",
+        "prompt-engineering"
+      ]
+    },
+    "testing": {
+      "enabled": true,
+      "version": "Core",
+      "file": "agents/zzik-testing.md",
+      "capabilities": [
+        "vitest-unit-testing",
+        "playwright-e2e",
+        "msw-mocking"
+      ]
+    },
+    "nanoUxui": {
+      "enabled": true,
+      "version": "V3",
+      "file": "agents/nano-uxui.md",
+      "capabilities": [
+        "atomic-qa",
+        "auto-fix",
+        "micro-analysis"
       ]
     }
+  },
+
+  "skills": {
+    "designTokens": { "enabled": true, "version": "V3", "file": "skills/design-tokens.md" },
+    "animationSystem": { "enabled": true, "version": "V3", "file": "skills/animation-system.md" },
+    "responsiveDesign": { "enabled": true, "version": "V3", "file": "skills/responsive-design.md" },
+    "zzikUiPatterns": { "enabled": true, "version": "V4", "file": "skills/zzik-ui-patterns.md" },
+    "microinteractions": { "enabled": true, "version": "V4", "file": "skills/microinteractions-v4.md" },
+    "motionEconomics": { "enabled": true, "version": "V7", "file": "skills/motion-economics-v7.md" },
+    "dataDrivenDesign": { "enabled": true, "version": "V7", "file": "skills/data-driven-design-v7.md" },
+    "stateMachines": { "enabled": true, "version": "V7", "file": "skills/state-machines-v7.md" },
+    "photoProcessing": { "enabled": true, "version": "Core", "file": "skills/photo-processing.md" },
+    "pgvectorOptimization": { "enabled": true, "version": "Core", "file": "skills/pgvector-optimization.md" },
+    "i18nImplementation": { "enabled": true, "version": "Core", "file": "skills/i18n-implementation.md" },
+    "browserAutomation": { "enabled": true, "version": "V2", "file": "skills/browser-automation.md" },
+    "accessibilityAudit": { "enabled": true, "version": "V2", "file": "skills/accessibility-audit.md" },
+    "performanceOptimization": { "enabled": true, "version": "V2", "file": "skills/performance-optimization.md" }
   },
 
   "autoAnalysis": {
     "onFileChange": {
       "enabled": true,
-      "triggers": [
-        "*.tsx",
-        "*.ts",
-        "*.css",
-        "*.json"
-      ],
+      "triggers": ["*.tsx", "*.ts", "*.css", "*.json"],
       "runTests": true,
       "generateReport": true,
       "validateTypes": true,
@@ -122,33 +253,17 @@
     },
     "beforeCommit": {
       "enabled": true,
-      "checks": [
-        "type-check",
-        "lint",
-        "test",
-        "a11y-audit",
-        "performance-check"
-      ]
+      "checks": ["type-check", "lint", "test", "a11y-audit", "performance-check"]
     },
     "beforeBuild": {
       "enabled": true,
-      "checks": [
-        "type-check",
-        "lint",
-        "test",
-        "build-validation",
-        "performance-baseline"
-      ]
+      "checks": ["type-check", "lint", "test", "build-validation", "performance-baseline"]
     }
   },
 
   "reporting": {
     "enabled": true,
-    "formats": [
-      "json",
-      "markdown",
-      "html"
-    ],
+    "formats": ["json", "markdown", "html"],
     "include": [
       "uxui-metrics",
       "accessibility-report",
@@ -158,5 +273,34 @@
       "style-validation",
       "recommendations"
     ]
+  },
+
+  "automationScripts": {
+    "fullPageTest": {
+      "description": "모든 페이지 방문 및 테스트",
+      "steps": [
+        { "action": "goto", "url": "http://localhost:3000" },
+        { "action": "take_screenshot", "name": "homepage" },
+        { "action": "extract_page_content" },
+        { "action": "goto", "url": "http://localhost:3000/explore" },
+        { "action": "take_screenshot", "name": "explore_page" },
+        { "action": "goto", "url": "http://localhost:3000/journey" },
+        { "action": "take_screenshot", "name": "journey_page" }
+      ]
+    },
+    "apiHealthCheck": {
+      "description": "API 엔드포인트 헬스 체크",
+      "endpoints": [
+        "/api/health",
+        "/api/locations",
+        "/api/journeys"
+      ]
+    },
+    "consoleErrorCapture": {
+      "description": "브라우저 콘솔 오류 캡처",
+      "monitorConsole": true,
+      "captureErrors": true,
+      "captureWarnings": true
+    }
   }
 }

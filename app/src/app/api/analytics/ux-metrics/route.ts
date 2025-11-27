@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
 
 /**
  * UX Metrics Collection Endpoint (Phase 7)
@@ -80,8 +81,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<UXMetrics
     // TODO: In production, store metrics in database
     // Example: await db.uxMetrics.create({ ...metrics })
 
-    // For now, log to console
-    console.log('[UX Metrics]', {
+    // Log metrics using structured logger
+    logger.info('UX Metrics received', {
       sessionId: metrics.sessionId,
       page: metrics.page,
       lcp: metrics.lcp,
@@ -100,7 +101,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<UXMetrics
       { status: 200 }
     );
   } catch (error) {
-    console.error('[UX Metrics Error]', error);
+    logger.error('UX Metrics processing failed', {}, error instanceof Error ? error : undefined);
     return NextResponse.json(
       {
         success: false,
@@ -120,7 +121,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     // Query parameters for filtering
     const pageParam = request.nextUrl.searchParams.get('page');
     const periodParam = request.nextUrl.searchParams.get('period') || '24h';
-    const thresholdParam = request.nextUrl.searchParams.get('threshold') || '50';
+    const _thresholdParam = request.nextUrl.searchParams.get('threshold') || '50';
 
     // TODO: Query metrics from database
     // Example aggregation query:
@@ -208,7 +209,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('[UX Metrics Aggregation Error]', error);
+    logger.error('UX Metrics aggregation failed', {}, error instanceof Error ? error : undefined);
     return NextResponse.json(
       {
         success: false,

@@ -47,7 +47,7 @@ export function SuccessCelebration({
   icon,
   actionLabel,
   onAction,
-  autoHideDuration = 3000,
+  autoHideDuration: _autoHideDuration = 3000,
 }: SuccessCelebrationProps) {
   const prefersReducedMotion = useReducedMotion();
 
@@ -135,7 +135,7 @@ interface InlineSuccessProps {
 export function InlineSuccess({
   show,
   message,
-  autoDismiss = 4000,
+  autoDismiss: _autoDismiss = 4000,
 }: InlineSuccessProps) {
   return (
     <AnimatePresence>
@@ -171,7 +171,7 @@ interface SuccessToastProps {
 export function SuccessToast({
   show,
   message,
-  duration = 4000,
+  duration: _duration = 4000,
   onDismiss,
 }: SuccessToastProps) {
   // Auto-dismiss after duration

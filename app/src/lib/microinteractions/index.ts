@@ -145,13 +145,13 @@ export const MOTION_TOKENS = {
   },
   easing: {
     linear: 'linear' as const,
-    easeIn: [0.4, 0, 1, 1] as number[],
-    easeOut: [0, 0, 0.2, 1] as number[],
-    easeInOut: [0.4, 0, 0.2, 1] as number[],
-    bounce: [0.34, 1.56, 0.64, 1] as number[],
-    smooth: [0.25, 0.1, 0.25, 1] as number[],
-    spring: [0.5, 1.5, 0.5, 1] as number[],
-    snap: [0.17, 0.67, 0.83, 0.67] as number[],
+    easeIn: [0.4, 0, 1, 1] as [number, number, number, number],
+    easeOut: [0, 0, 0.2, 1] as [number, number, number, number],
+    easeInOut: [0.4, 0, 0.2, 1] as [number, number, number, number],
+    bounce: [0.34, 1.56, 0.64, 1] as [number, number, number, number],
+    smooth: [0.25, 0.1, 0.25, 1] as [number, number, number, number],
+    spring: [0.5, 1.5, 0.5, 1] as [number, number, number, number],
+    snap: [0.17, 0.67, 0.83, 0.67] as [number, number, number, number],
   },
 };
 
@@ -280,14 +280,14 @@ export function getMotionConfig(
       duration: 0.01,
       easing: 'linear',
       delay: 0,
-    } as any;
+    } as MicrointeractionConfig;
   }
 
   if (intensity === 'energetic' && type === 'success') {
     return {
       ...MICROINTERACTION_PRESETS.successCelebration,
       duration: 700,
-    } as any;
+    } as MicrointeractionConfig;
   }
 
   return baseConfig;

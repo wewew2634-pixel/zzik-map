@@ -18,7 +18,7 @@ import { logger } from '@/lib/logger';
 import { validateAnalyticsMetrics, formatValidationErrors } from '@/lib/schemas/analytics';
 import { sanitizeFileName, sanitizeMetadata } from '@/lib/sanitize';
 import { RateLimiters, applyRateLimitHeaders, createRateLimitError } from '@/lib/rateLimit';
-import { withErrorHandler, Errors, handleApiError } from '@/lib/errorHandler';
+import { withErrorHandler, Errors } from '@/lib/errorHandler';
 
 /**
  * POST handler with all security fixes
@@ -39,7 +39,7 @@ async function handlePost(request: NextRequest): Promise<NextResponse> {
   let body: unknown;
   try {
     body = await request.json();
-  } catch (error) {
+  } catch {
     throw Errors.validation('Invalid JSON body');
   }
 

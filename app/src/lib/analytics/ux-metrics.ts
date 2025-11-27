@@ -74,8 +74,8 @@ function initializePerformanceObserver(
 
     // Report after 3 seconds
     setTimeout(() => callback(metrics), 3000);
-  } catch (error) {
-    console.warn('PerformanceObserver setup failed:', error);
+  } catch {
+    // PerformanceObserver not supported - silent fail for older browsers
   }
 }
 
@@ -103,7 +103,7 @@ export function trackInteraction(actionName: string, duration: number) {
       method: 'POST',
       body: JSON.stringify(metrics),
       keepalive: true,
-    }).catch((err) => console.warn('Failed to send metrics:', err));
+    }).catch(() => { /* Silent fail for metrics - non-critical */ });
   }
 }
 

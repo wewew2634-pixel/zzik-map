@@ -13,8 +13,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useMemo, useCallback, useState } from 'react';
-import type { UploadAnalyticsMetrics, UploadKPIs } from '@/hooks/useUploadAnalytics';
+import { useMemo, useState } from 'react';
+import type { UploadAnalyticsMetrics } from '@/hooks/useUploadAnalytics';
 import { calculateKPIs } from '@/hooks/useUploadAnalytics';
 
 interface KPIDashboardProps {
@@ -233,7 +233,7 @@ export function KPIDashboard({
   dateRange,
   cohortFilter,
 }: KPIDashboardProps) {
-  const [selectedMetric, setSelectedMetric] = useState<string | null>(null);
+  const [_selectedMetric, _setSelectedMetric] = useState<string | null>(null);
 
   const filteredMetrics = useMemo(() => {
     let filtered = metrics;

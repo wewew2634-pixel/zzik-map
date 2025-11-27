@@ -274,7 +274,9 @@ export function useJourney(options: UseJourneyOptions = {}) {
 
       return photo;
     },
-    [state.photos.length, maxPhotos, onPhotoAdded, onError]
+    // extractLocation은 이 훅 내부에서 정의되어 안정적이며,
+    // 의존성에 포함하면 순환 참조 발생: addPhoto → extractLocation → state
+    [state.photos.length, maxPhotos, onPhotoAdded, onError] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   // Extract location from photo using real EXIF extraction
@@ -342,7 +344,9 @@ export function useJourney(options: UseJourneyOptions = {}) {
         }));
       }
     },
-    [autoAnalyze]
+    // analyzeJourneyById는 이 훅 내부에서 정의되어 안정적이며,
+    // 의존성에 포함하면 순환 참조 발생: extractLocation → analyzeJourneyById → state
+    [autoAnalyze] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   // Analyze journey by location ID (main API call)

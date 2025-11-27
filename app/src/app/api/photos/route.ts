@@ -36,19 +36,13 @@ export async function GET(request: NextRequest) {
     const supabase = createServiceClient();
 
     // Build query with count
+    // Phase 1.2: 민감 데이터 보호 - GPS, 카메라 정보 제외
     let query = supabase
       .from('photos')
       .select(`
         id,
         storage_path,
         thumbnail_path,
-        latitude,
-        longitude,
-        gps_source,
-        gps_confidence,
-        camera_make,
-        camera_model,
-        taken_at,
         status,
         vibe_analysis,
         created_at,

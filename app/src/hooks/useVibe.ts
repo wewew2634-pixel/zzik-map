@@ -344,7 +344,9 @@ export function useVibe(options: UseVibeOptions = {}) {
         return null;
       }
     },
-    [autoSearch, onAnalysisComplete, onError]
+    // searchMatches는 이 훅 내부에서 정의되어 안정적이므로 의존성에서 제외
+    // (순환 의존성 방지: analyzeFile → searchMatches → state.analysisResult)
+    [autoSearch, onAnalysisComplete, onError] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   // Analyze image from URL (creates a blob fetch)

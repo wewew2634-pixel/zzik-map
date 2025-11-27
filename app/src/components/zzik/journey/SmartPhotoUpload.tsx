@@ -48,15 +48,49 @@ export const SmartPhotoUpload = forwardRef<HTMLDivElement, SmartPhotoUploadProps
       setState('idle');
     }, []);
 
+    // Phase 1.3: processFile 로직 인라인화하여 의존성 문제 해결
     const handleDrop = useCallback(async (e: React.DragEvent) => {
       e.preventDefault();
       e.stopPropagation();
 
       const files = Array.from(e.dataTransfer.files);
       if (files.length > 0) {
-        await processFile(files[0]);
+        const file = files[0];
+
+        // 인라인 검증 처리
+        const validTypes = accept.split(',').map(t => t.trim());
+        if (!validTypes.some(type => file.type.match(type))) {
+          setErrorMessage('Invalid file type. Please upload JPG, PNG, or WebP.');
+          setState('error');
+          onError?.(new Error('Invalid file type'));
+          return;
+        }
+
+        if (file.size > maxSize) {
+          setErrorMessage(`File too large. Max size: ${maxSize / 1024 / 1024}MB`);
+          setState('error');
+          onError?.(new Error('File too large'));
+          return;
+        }
+
+        setState('processing');
+        setErrorMessage('');
+
+        try {
+          const gps = await extractGPSFromExif(file);
+          const preview = URL.createObjectURL(file);
+          const photo: UploadedPhoto = { file, preview, gps };
+
+          setUploadedPhoto(photo);
+          setState('ready');
+          onPhotoReady?.(photo);
+        } catch (error) {
+          setErrorMessage('Failed to process photo. Please try again.');
+          setState('error');
+          onError?.(error instanceof Error ? error : new Error('Processing failed'));
+        }
       }
-    }, []);
+    }, [accept, maxSize, onError, onPhotoReady]);
 
     const handleClick = () => {
       inputRef.current?.click();

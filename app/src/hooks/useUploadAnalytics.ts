@@ -10,7 +10,7 @@
 
 'use client';
 
-import { useCallback, useRef, useEffect } from 'react';
+import { useCallback, useRef } from 'react';
 import { logger } from '@/lib/logger';
 
 type AnalyticsEventType =
@@ -31,7 +31,7 @@ type AnalyticsEventType =
 interface AnalyticsEvent {
   eventType: AnalyticsEventType;
   timestamp: number;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
   userSegment?: 'explorer' | 'one_shot' | 'high_engagement' | 'inactive';
 }
 
@@ -107,7 +107,7 @@ export function useUploadAnalytics() {
   const trackEvent = useCallback(
     (
       eventType: AnalyticsEventType,
-      metadata: Record<string, any> = {},
+      metadata: Record<string, unknown> = {},
       userSegment?: 'explorer' | 'one_shot' | 'high_engagement' | 'inactive',
     ) => {
       const event: AnalyticsEvent = {
@@ -125,7 +125,7 @@ export function useUploadAnalytics() {
         case 'upload_error':
         case 'processing_failed':
           metricsRef.current.hadErrors = true;
-          if (metadata.error) {
+          if (metadata.error && typeof metadata.error === 'string') {
             metricsRef.current.errorTypes.push(metadata.error);
           }
           break;
