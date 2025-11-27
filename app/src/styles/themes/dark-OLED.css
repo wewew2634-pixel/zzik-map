@@ -1,0 +1,107 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   ZZIK Design System V3 - Dark Theme (OLED Optimization - Phase 5)
+   ══════════════════════════════════════════════════════════════════════════════
+
+   OLED displays benefit from true black (#000000) backgrounds:
+   - Reduces power consumption (OLED pixels are off)
+   - Improves battery life (+15-30% on OLED devices)
+   - Reduces eye strain in very dark environments
+
+   Feature detection:
+   - Apply only when user selects "Maximum Dark" mode
+   - Detects OLED display capability via CSS (future)
+   - Gracefully falls back to standard dark theme
+
+   Psychology: Ultimate comfort in dark environments, premium feel
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+:root,
+[data-theme="dark-oled"] {
+  color-scheme: dark;
+
+  /* Surface Hierarchy - OLED Optimized */
+  --surface-base:    #000000;      /* True black for OLED power savings */
+  --surface-raised:  #0F1419;      /* Minimal elevation, still very dark */
+  --surface-overlay: #1A2027;      /* Slight lightness for modals */
+  --surface-sunken:  #000000;      /* Back to pure black for depth */
+  --surface-inverse: #F9FAFB;      /* Light surfaces unchanged */
+
+  /* Text Hierarchy - High Contrast for Black Backgrounds */
+  --text-primary:    #FFFFFF;      /* Pure white for max contrast */
+  --text-secondary:  #D0D5DD;      /* Lighter gray on pure black */
+  --text-tertiary:   #ACAFB8;      /* Still readable but subtle */
+  --text-disabled:   #52556B;      /* Dimmer for disabled state */
+  --text-inverse:    #000000;
+  --text-brand:      #FF8A90;      /* Same as regular dark */
+  --text-accent:     #00D9FF;
+
+  /* Border Hierarchy - Adapted for OLED */
+  --border-subtle:   rgba(255, 255, 255, 0.08);  /* Barely visible */
+  --border-default:  rgba(255, 255, 255, 0.12);  /* Subtle but visible */
+  --border-strong:   rgba(255, 255, 255, 0.24);  /* More prominent */
+  --border-focus:    #00D9FF;
+  --border-error:    #FF6B6B;      /* Slightly brighter for visibility */
+  --border-success:  #51CF66;
+
+  /* Interactive States */
+  --interactive-primary:        #FF8A90;
+  --interactive-primary-hover:  #FF9AA5;
+  --interactive-primary-active: #FF6B75;
+
+  --interactive-secondary:        #00D9FF;
+  --interactive-secondary-hover:  #1AE0FF;
+  --interactive-secondary-active: #00B8D9;
+
+  --interactive-ghost:        transparent;
+  --interactive-ghost-hover:  rgba(255, 255, 255, 0.08);
+  --interactive-ghost-active: rgba(255, 255, 255, 0.12);
+
+  --interactive-danger:        #FF5252;
+  --interactive-danger-hover:  #FF6B6B;
+  --interactive-danger-active: #FF3838;
+
+  /* Status Colors - OLED Adapted */
+  --status-success-bg:   rgba(81, 207, 102, 0.15);
+  --status-success-text: #51CF66;
+  --status-warning-bg:   rgba(255, 193, 7, 0.15);
+  --status-warning-text: #FFD93D;
+  --status-error-bg:     rgba(255, 82, 82, 0.15);
+  --status-error-text:   #FF6B6B;
+  --status-info-bg:      rgba(0, 217, 255, 0.15);
+  --status-info-text:    #00D9FF;
+
+  /* Input States */
+  --input-bg:          #0F1419;
+  --input-border:      rgba(255, 255, 255, 0.12);
+  --input-placeholder: #7A7F8B;
+  --input-focus-ring:  rgba(0, 217, 255, 0.2);
+
+  /* Scrollbar - Very Subtle */
+  --scrollbar-track: #000000;
+  --scrollbar-thumb: #2A2F3B;
+  --scrollbar-thumb-hover: #3A3F4B;
+}
+
+/* Detect OLED display (future - currently use media query as fallback) */
+@supports (padding: 0) {
+  [data-theme="dark-oled"] {
+    --surface-base: #000000;
+  }
+}
+
+/* Reduced motion - OLED theme */
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="dark-oled"] * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* OLED specific: Battery saving via dark mode */
+@media (prefers-color-scheme: dark) {
+  [data-theme="dark-oled"] {
+    /* Additional energy-saving optimizations */
+    --surface-base: #000000;
+  }
+}

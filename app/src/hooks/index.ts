@@ -6,10 +6,12 @@
 
 // Accessibility
 export { useReducedMotion } from './useReducedMotion';
+export { useDarkMode } from './useDarkMode';
+export type { Theme, ResolvedTheme, UseDarkModeReturn } from './useDarkMode';
 
 // Theme
 export { useTheme } from './useTheme';
-export type { Theme, ResolvedTheme } from './useTheme';
+export type { Theme as LegacyTheme, ResolvedTheme as LegacyResolvedTheme } from './useTheme';
 
 // Journey Intelligence
 export { useJourney } from './useJourney';
